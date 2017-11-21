@@ -27,18 +27,24 @@ TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, i
     return t;
 }
 
-int lookup(char *ident, TAB_ELEMENT &element, int &lev) {
-    for(vector<TAB_ELEMENT>::iterator iter = local_tab[display].begin(); iter != local_tab[display].end(); iter++) {
-        if(!strcmp(iter->ident, ident)) {
-            element = *iter;
-            lev = 1;
-            return 1;
-        }
+int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
+    vector<TAB_ELEMENT>::iterator head, tail;
+    if(local_flag) {
+        head = local_tab[display].begin();
+        tail = local_tab[display].end();
+    } else {
+        head = global_tab.begin();
+        tail = global_tab.end();
     }
-    for (vector<TAB_ELEMENT>::iterator iter = global_tab.begin(); iter != global_tab.end(); iter++) {
+    for(vector<TAB_ELEMENT>::iterator iter = head; iter != tail; iter++) {
         if(!strcmp(iter->ident, ident)) {
-            element = *iter;
-            lev = 0;
+            if(element){
+            element->kind = iter->kind;
+            element->type = iter->type;
+            strcpy(element->ident, iter->ident);
+            element->value = iter->value;
+            element->length = iter->length;
+            }
             return 1;
         }
     }

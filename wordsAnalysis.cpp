@@ -26,6 +26,16 @@ char stringbuff[500];
 
 SYMBOL sym;
 
+void nextCh() {
+    while(cc == ll) {
+        if(!fin->getline(current_line, 300))error(2);
+        lc++;
+        cc = 0;
+        ll = strlen(current_line);
+    }
+    ch = current_line[cc++];
+}
+
 void set_file_stream(char * filepath) {
     fin = new ifstream(filepath);
     if(!*fin) {
@@ -36,15 +46,6 @@ void set_file_stream(char * filepath) {
     nextCh();
 }
 
-void nextCh() {
-    while(cc == ll) {
-        if(!fin->getline(current_line, 300))error(2);
-        lc++;
-        cc = 0;
-        ll = strlen(current_line);
-    }
-    ch = current_line[cc++];
-}
 
 void skip_current_line() {
     do {

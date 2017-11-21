@@ -45,7 +45,7 @@ static SYMBOL keySet[] = {
 };
 
 void set_file_stream(char * filepath);
-void nextCh();
+// void nextCh();
 void skip_current_line();
 void nextSym();
 
@@ -84,5 +84,7 @@ extern vector<vector<TAB_ELEMENT> > local_tab;
 
 TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);
 
-int lookup(char *ident, TAB_ELEMENT &element, int &lev);
+int lookup(char *ident, int local_flag, TAB_ELEMENT *element);
 
+// analysis.cpp
+void constDeclare(int lev);

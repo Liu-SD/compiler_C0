@@ -1,4 +1,4 @@
-#include "main.h"
+#include "error.h"
 #include <vector>
 #include <string.h>
 #include <stdio.h>
@@ -7,16 +7,6 @@
 using namespace std;
 
 vector<ERROR> errorlist;
-
-const int SHUT_DOWN = 2;
-
-char *errormessages[] = {
-    "illegal string format", // 0
-    "no match symbol for current char", // 1
-
-    "reach end of file", // 2
-    "file not exist" // 3
-};
 
 void showerrormessages() {
     printf("\nerror messages of program:\n");

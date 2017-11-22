@@ -1,4 +1,4 @@
-#include "main.h"
+#include "symbolTable.h"
 #include <vector>
 #include <string>
 #include <string.h>
@@ -18,10 +18,12 @@ TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, i
     t.type = type;
     t.value = value;
     t.length = length;
+    t.func_display_num = -1;
     if(lev) local_tab[display].push_back(t);
     else global_tab.push_back(t);
     if(kind == func) {
         ++display;
+        t.func_display_num = display;
         local_tab.push_back(vector<TAB_ELEMENT>());
     }
     return t;
@@ -44,9 +46,11 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
                 strcpy(element->ident, iter->ident);
                 element->value = iter->value;
                 element->length = iter->length;
+                element->func_display_num = iter->func_display_num;
             }
             return 1;
         }
     }
     return 0;
 }
+

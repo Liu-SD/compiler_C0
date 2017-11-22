@@ -1,10 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <stdlib.h>
-using namespace std;
+#include "error.h"
 
-// wordsAnalysis.cpp
 typedef enum {ident = 0,
               intcon, intsy, charcon, charsy, stringcon, voidsy, constsy,
               pluscon, minuscon, timescon, divcon, becomes,
@@ -44,47 +41,6 @@ static SYMBOL keySet[] = {
     voidsy, mainsy, intsy, charsy, returnsy, constsy
 };
 
-void set_file_stream(char * filepath);
+extern void set_file_stream(char * filepath);
 // void nextCh();
-void skip_current_line();
-void nextSym();
-
-// error.cpp
-struct ERROR {
-    int errcode;
-    int errline;
-    int errpos;
-    char *errmsg;
-    char linecontent[300];
-};
-extern vector<ERROR> errorlist;
-void showerrormessages();
-void error(int i);
-
-
-// symbolTab.cpp
-typedef enum {
-    var, para, func, cons
-} SYMBOL_KIND;
-
-typedef enum {
-    t_void, t_char, t_int
-} SYMBOL_TYPE;
-
-struct TAB_ELEMENT {
-    char ident[30]; // name of ident
-    SYMBOL_TYPE type;
-    SYMBOL_KIND kind;
-    int length; // 0 if not array
-    int value;
-};
-
-extern vector<TAB_ELEMENT> global_tab;
-extern vector<vector<TAB_ELEMENT> > local_tab;
-
-TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);
-
-int lookup(char *ident, int local_flag, TAB_ELEMENT *element);
-
-// analysis.cpp
-void constDeclare(int lev);
+extern void nextSym();

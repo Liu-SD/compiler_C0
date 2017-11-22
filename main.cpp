@@ -1,5 +1,5 @@
 #include <iostream>
-#include "main.h"
+#include "grammaticalAnalysis.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "grammaticalAnalysis.h"
 #include <iostream>
 
 using namespace std;
@@ -50,5 +50,6 @@ void constDeclare(int lev) {
         cout <<"should be ;" << endl;
     nextSym();
 }
+
 
 

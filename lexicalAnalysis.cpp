@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
-#include "main.h"
+#include "lexicalAnalysis.h"
 
 #define isnum(x) ((x) >= '0' && (x) <= '9')
 #define isalpha(x) ((x) == '_' || (x) >='a' && (x) <= 'z' || (x) >= 'A' && (x) <= 'Z')
@@ -19,12 +19,10 @@ int lc;
 int cc;
 int num;
 char ch;
-
-char token[30];
-char current_line[300];
-char stringbuff[500];
-
 SYMBOL sym;
+char token[30];
+char stringbuff[500];
+char current_line[300];
 
 void nextCh() {
     while(cc == ll) {
@@ -48,16 +46,6 @@ void set_file_stream(char * filepath) {
     nextCh();
 }
 
-
-void skip_current_line() {
-    do {
-        if(!fin->getline(current_line, 300))error(2);
-        lc++;
-        cc = 0;
-        ll = strlen(current_line);
-    } while(cc == ll);
-    ch = current_line[cc++];
-}
 
 void nextSym() {
     while(isblank(ch)) nextCh();

@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 vector<ERROR> errorlist;
 
 const int SHUT_DOWN = 2;
@@ -41,7 +39,10 @@ void error(int i) {
     if(i >= SHUT_DOWN) {
         showerrormessages();
         exit(-1);
-    } else {
+    }
+    /*
+    else {
         skip_current_line();
     }
+    */
 }

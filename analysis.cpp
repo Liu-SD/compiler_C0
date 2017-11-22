@@ -28,7 +28,7 @@ void constDeclare(int lev) {
                     cout << "ident repeated" << endl;
                 nextSym();
             }
-        }while(sym == comma);
+        } while(sym == comma);
     } else if(sym == charsy) {
         do {
             nextSym();
@@ -44,9 +44,11 @@ void constDeclare(int lev) {
                     cout << "ident repeated" << endl;
                 nextSym();
             }
-        }while (sym == comma);
+        } while (sym == comma);
     } else cout << "should be 'int' or 'char'" << endl;
     if(sym != semicolon)
         cout <<"should be ;" << endl;
     nextSym();
 }
+
+

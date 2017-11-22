@@ -76,7 +76,7 @@ struct TAB_ELEMENT {
     SYMBOL_TYPE type;
     SYMBOL_KIND kind;
     int length; // 0 if not array
-    int value; // invalid if not constant
+    int value;
 };
 
 extern vector<TAB_ELEMENT> global_tab;

@@ -38,12 +38,12 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
     }
     for(vector<TAB_ELEMENT>::iterator iter = head; iter != tail; iter++) {
         if(!strcmp(iter->ident, ident)) {
-            if(element){
-            element->kind = iter->kind;
-            element->type = iter->type;
-            strcpy(element->ident, iter->ident);
-            element->value = iter->value;
-            element->length = iter->length;
+            if(element) {
+                element->kind = iter->kind;
+                element->type = iter->type;
+                strcpy(element->ident, iter->ident);
+                element->value = iter->value;
+                element->length = iter->length;
             }
             return 1;
         }

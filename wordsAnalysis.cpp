@@ -29,6 +29,8 @@ SYMBOL sym;
 void nextCh() {
     while(cc == ll) {
         if(!fin->getline(current_line, 300))error(2);
+        current_line[strlen(current_line) + 1] = 0;
+        current_line[strlen(current_line)] = '\n';
         lc++;
         cc = 0;
         ll = strlen(current_line);
@@ -188,7 +190,6 @@ void nextSym() {
             }
         }
     } else {
-        cout << int(ch) << endl;
         error(1);
     }
 }

@@ -8,7 +8,7 @@ int main() {
     nextSym();
     constDeclare(0);
     constDeclare(0);
-    for(int i = 0; i < global_tab.size(); i++){
+    for(int i = 0; i < global_tab.size(); i++) {
         cout <<global_tab[i].ident << "  " << global_tab[i].value << endl;
     }
     return 0;

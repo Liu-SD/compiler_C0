@@ -32,12 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="analysis.cpp" />
 		<Unit filename="error.cpp" />
+		<Unit filename="error.h" />
+		<Unit filename="grammaticalAnalysis.cpp" />
+		<Unit filename="grammaticalAnalysis.h" />
+		<Unit filename="lexicalAnalysis.cpp" />
+		<Unit filename="lexicalAnalysis.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
-		<Unit filename="symbleTab.cpp" />
-		<Unit filename="wordsAnalysis.cpp" />
+		<Unit filename="symbolTable.cpp" />
+		<Unit filename="symbolTable.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -10,9 +10,9 @@
 #define isblank(x) ((x) == ' ' || (x) == '\t' || (x) == '\n' || (x) == 13)
 #define tolow(s) do {int i = -1; while(s[++i]) s[i] = tolower(s[i]);} while(0)
 
-using namespace std;
+// using namespace std;
 
-ifstream *fin;
+std::ifstream *fin;
 
 int ll;
 int lc;
@@ -37,7 +37,7 @@ void nextCh() {
 }
 
 void set_file_stream(char * filepath) {
-    fin = new ifstream(filepath);
+    fin = new std::ifstream(filepath);
     if(!*fin) {
         error(3);
     }

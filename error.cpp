@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-using namespace std;
+// using namespace std;
 
-vector<ERROR> errorlist;
+std::vector<ERROR> errorlist;
 
 void showerrormessages() {
     printf("\nerror messages of program:\n");
@@ -16,14 +16,11 @@ void showerrormessages() {
     }
 }
 
-
-
 void error(int i) {
     ERROR err;
     err.errcode = i;
     err.errline = lc + 1;
     err.errpos = cc - 1;
-    err.errmsg = NULL;
     strcpy(err.linecontent, current_line);
     errorlist.push_back(err);
     if(i >= SHUT_DOWN) {

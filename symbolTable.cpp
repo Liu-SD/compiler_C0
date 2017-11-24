@@ -8,10 +8,13 @@ using namespace std;
 vector<TAB_ELEMENT> global_tab;
 vector<vector<TAB_ELEMENT> > local_tab;
 int display = -1;
+int offset = 0;
+
+const int FUNC_OFFSET = 3;// area for return value, return address, previous $fp
 
 vector<string> mcode;
 
-TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev) {
+TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev) {
     TAB_ELEMENT t;
     strcpy(t.ident, ident);
     t.kind = kind;
@@ -21,12 +24,20 @@ TAB_ELEMENT enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, i
     t.func_display_num = -1;
     if(lev) local_tab[display].push_back(t);
     else global_tab.push_back(t);
+    // if function, new display area
     if(kind == func) {
-        ++display;
-        t.func_display_num = display;
+        t.func_display_num = ++display;
         local_tab.push_back(vector<TAB_ELEMENT>());
+        offset = FUNC_OFFSET;
     }
-    return t;
+
+    // if parameter or variable, add offset
+    if(kind == para || kind == var) {
+        t.value = offset;
+        if(length) offset += length;
+        else ++offset;
+    }
+    return &t;
 }
 
 int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
@@ -53,4 +64,34 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
     }
     return 0;
 }
+
+/*
+about offset:
+        .
+        .
+        .
+|   return value  |
+ -----------------
+ -----------------
+|                 |
+|operate num stack|
+ -----------------
+|                 |
+| local variables |
+ -----------------
+|                 |
+|   parameters    |
+ -----------------
+|    prev $fp     |
+ -----------------
+| return address  |
+ -----------------
+|  return value   |
+ -----------------
+ -----------------
+|                 |
+| global variable |
+ -----------------
+*/
+
 

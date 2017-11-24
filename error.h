@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-using namespace std;
+// using namespace std;
 
 extern int lc;
 extern int cc;
@@ -11,7 +11,7 @@ struct ERROR {
     int errcode;
     int errline;
     int errpos;
-    char *errmsg;
+    // char *errmsg;
     char linecontent[300];
 };
 
@@ -25,6 +25,6 @@ static char *errormessages[] = {
     "file not exist" // 3
 };
 
-extern vector<ERROR> errorlist;
+extern std::vector<ERROR> errorlist;
 extern void showerrormessages();
 extern void error(int i);

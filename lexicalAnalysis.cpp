@@ -26,7 +26,10 @@ char current_line[300];
 
 void nextCh() {
     while(cc == ll) {
-        if(!fin->getline(current_line, 300))error(2);
+        if(!fin->getline(current_line, 300)) {
+            ch = -1;
+            return;
+        }
         current_line[strlen(current_line) + 1] = 0;
         current_line[strlen(current_line)] = '\n';
         lc++;
@@ -48,6 +51,8 @@ void set_file_stream(char * filepath) {
 
 
 void nextSym() {
+    if(sym == eof) error(2);
+
     while(isblank(ch)) nextCh();
 
     if(ch == '+') {
@@ -177,7 +182,13 @@ void nextSym() {
                 break;
             }
         }
-    } else {
+    }
+
+    else if(ch == -1) {
+        sym = eof;
+    }
+
+    else {
         error(1);
     }
 }

@@ -6,7 +6,7 @@
 
 void show_lexical() {
     int i = 1;
-    while(1) {
+    while(sym != eof) {
         nextSym();
         std::string s;
         switch (sym) {
@@ -93,6 +93,9 @@ void show_lexical() {
         case colon:
             s = ":";
             break;
+        case eof:
+            s = "end of file flag";
+            break;
         default:
             s = "error!!!";
             break;
@@ -109,5 +112,6 @@ int main() {
     set_file_stream("15061111_test.c0");
     nextSym();
     NFA_program();
-    // show_lexical();
+    show_tables();
+    //show_lexical();
 }

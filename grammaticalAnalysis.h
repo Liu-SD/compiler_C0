@@ -1,6 +1,7 @@
+#pragma once
+
 #include "symbolTable.h"
 #include "lexicalAnalysis.h"
-
-extern void constDeclare(int lev);
+#include "declaration.h"
 
 extern void NFA_program();

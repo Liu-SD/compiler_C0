@@ -9,7 +9,7 @@ typedef enum {ident = 0,
               lsmall, rsmall, lmedium, rmedium, lbig, rbig,
               comma, semicolon, colon,
               ifsy, elsesy, whilesy, switchsy, casesy, defaultsy, mainsy,
-              returnsy, scanfsy, printfsy,
+              returnsy, scanfsy, printfsy, eof
              } SYMBOL;
 
 static char* SYMBOL_STRING[] = {"ident", "intcon", "instsy", "charcon",
@@ -19,7 +19,7 @@ static char* SYMBOL_STRING[] = {"ident", "intcon", "instsy", "charcon",
                                 "leq", "lsmall", "rsmall", "lmedium", "rmedium",
                                 "lbig", "rbig", "comma", "semicolon", "colon",
                                 "ifsy", "elsesy", "whilesy", "switchsy", "casesy",
-                                "defaultsy", "mainsy", "returnsy", "scanfsy", "printfsy"
+                                "defaultsy", "mainsy", "returnsy", "scanfsy", "printfsy", "eof"
                                };
 
 extern int ll;

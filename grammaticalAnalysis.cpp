@@ -3,105 +3,24 @@
 
 using namespace std;
 
-SYMBOL_TYPE type_from_B;
-
-void constDeclare(int lev) {
-    if(sym != constsy)
-        cout << "should be 'const'" << endl;
-    nextSym();
-    if(sym == intsy) {
-        do {
-            nextSym();
-            if(sym != ident) cout << "should be ident" << endl;
-            nextSym();
-            if(sym != becomes) cout << "should be =" << endl;
-            nextSym();
-            int signal = 1;
-            if(sym == minuscon || sym == pluscon) {
-                if(sym == minuscon)
-                    signal = -1;
-                nextSym();
-            }
-            if(sym != intcon) cout << "should be int" << endl;
-            else {
-                if(!lookup(token, lev, NULL))
-                    enter(token, cons, t_int, 0, signal * num, lev);
-                else
-                    cout << "ident repeated" << endl;
-                nextSym();
-            }
-        } while(sym == comma);
-    } else if(sym == charsy) {
-        do {
-            nextSym();
-            if(sym != ident) cout << "should be ident" << endl;
-            nextSym();
-            if(sym != becomes) cout <<"should be =" << endl;
-            nextSym();
-            if(sym != charcon) cout << "should be char" <<endl;
-            else  {
-                if(!lookup(token, lev, NULL))
-                    enter(token, cons, t_char, 0, num, lev);
-                else
-                    cout << "ident repeated" << endl;
-                nextSym();
-            }
-        } while (sym == comma);
-    } else cout << "should be 'int' or 'char'" << endl;
-    if(sym != semicolon)
-        cout <<"should be ;" << endl;
-    nextSym();
-}
-
+SYMBOL_TYPE global_type;
+TAB_ELEMENT* global_tabelement;
 
 void stat_A() {
     constDeclare(0);
 }
 
 void stat_B() {
-    type_from_B = sym == intsy ? t_int : t_char;
-    nextSym();
-    if(sym != ident) cout << "should be ident" << endl;
-    if(lookup(token, false, NULL)) cout << "ident repeated" << endl;
-    nextSym();
-    int length = 0;
-    if(sym == lmedium) {
-        nextSym();
-        if(sym != intcon || num == 0) cout << "array length should be int and larger than 0" << endl;
-        length = num;
-        nextSym();
-        if(sym != rmedium) cout << "should be rmedium" << endl;
-        nextSym();
-    }
-    if(sym == comma || sym == semicolon)
-        enter(token, var, type_from_B, length, 0, 0);
-    else if (sym == lsmall || sym == lbig)
-        enter(token, func, type_from_B, 0, 0, 0);
+    global_tabelement = global_varOrFunc();
 }
 
 void stat_C() {
     nextSym();
+    global_tabelement = enter(token, func, t_void, 0, 0, 0);
 }
 
 void stat_D() {
-    while(sym == comma) {
-        nextSym();
-        if(sym != ident) cout << "should be ident" << endl;
-        if(lookup(token, false, NULL)) cout << "ident repeated" << endl;
-        nextSym();
-        int length = 0;
-        if(sym == lmedium) {
-            nextSym();
-            if(sym != intcon || num == 0) cout << "array length should be int and larger than 0" << endl;
-            length = num;
-            nextSym();
-            if(sym != rmedium) cout << "should be rmedium" << endl;
-            nextSym();
-        }
-        enter(token, var, type_from_B, length, 0, 0);
-    }
-    if(sym == semicolon)nextSym();
-    else cout << "should end with semicolon" << endl;
+    global_varDelclare(global_tabelement->type);
 }
 
 void stat_E() {
@@ -126,14 +45,13 @@ void stat_F() {
 
 void stat_G() {
     // TODO
-    cout << SYMBOL_STRING[sym] << endl;
-    nextSym();
-    cout << SYMBOL_STRING[sym] << endl;
-    nextSym();
-    cout << SYMBOL_STRING[sym] << endl;
+    global_tabelement = global_varOrFunc();
+    if(global_tabelement->kind != func) cout << "no var after function declaration" << endl;
 }
 
 void stat_H() {
+    // TODO
+    nextSym();
     nextSym();
     nextSym();
     int i = 1;
@@ -148,9 +66,10 @@ void NFA_program() {
     typedef enum {A, B, C, D, E, F, G, H} STAT;
     STAT status = A;
     while(status != H) {
+        cout << char(status + 'A') << endl;
         switch (status) {
-        case A:
 
+        case A:
             if(sym == constsy) {
                 status = A;
                 stat_A();
@@ -162,6 +81,7 @@ void NFA_program() {
                 stat_B();
             } else cout << "error in status A" << endl;
             break;
+
         case B:
             if(sym == comma || sym == semicolon) {
                 status = D;
@@ -171,6 +91,7 @@ void NFA_program() {
                 stat_E();
             } else cout << "error in status B" << endl;
             break;
+
         case C:
             if(sym == mainsy) {
                 status = H;
@@ -180,6 +101,7 @@ void NFA_program() {
                 stat_F();
             } else cout << "error in status C" << endl;
             break;
+
         case D:
             if(sym == voidsy) {
                 status = C;
@@ -189,6 +111,7 @@ void NFA_program() {
                 stat_B();
             } else cout << "error in status D" << endl;
             break;
+
         case E:
             if(sym == voidsy) {
                 status = C;
@@ -198,12 +121,14 @@ void NFA_program() {
                 stat_G();
             } else cout << "error in status E" << endl;
             break;
+
         case F:
             if(sym == lsmall || sym == lbig) {
                 status = E;
                 stat_E();
             } else cout << "error in status F" << endl;
             break;
+
         case G:
             if(sym == lsmall || sym == lbig) {
                 status = E;

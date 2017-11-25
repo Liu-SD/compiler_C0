@@ -27,3 +27,5 @@ extern vector<vector<TAB_ELEMENT> > local_tab;
 extern TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);
 
 extern int lookup(char *ident, int local_flag, TAB_ELEMENT *element);
+
+extern void show_tables();

@@ -1,6 +1,7 @@
 #include "symbolTable.h"
 #include <vector>
 #include <string>
+#include <iostream>
 #include <string.h>
 
 using namespace std;
@@ -63,6 +64,18 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
         }
     }
     return 0;
+}
+
+void show_tables() {
+    cout << "global_table: " << endl;
+    for(int i = 0; i < global_tab.size(); i++)
+        cout << global_tab[i].ident << endl;
+    cout << "local_table: " << endl;
+    for (int i = 0; i < local_tab.size(); i++){
+        cout << "display " << i << endl;
+        for (int j = 0; j < local_tab[i].size(); j++)
+            cout << local_tab[i][j].ident << endl;
+    }
 }
 
 /*

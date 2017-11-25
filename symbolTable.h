@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -18,7 +19,8 @@ struct TAB_ELEMENT {
     SYMBOL_KIND kind;
     int length; // 0 if not array
     int value;
-    int func_display_num;
+
+    friend ostream &operator << (ostream &out, TAB_ELEMENT ele);
 };
 
 extern vector<TAB_ELEMENT> global_tab;

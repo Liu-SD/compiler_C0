@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <string.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -15,6 +16,19 @@ const int FUNC_OFFSET = 3;// area for return value, return address, previous $fp
 
 vector<string> mcode;
 
+ostream &operator << (ostream &out, TAB_ELEMENT ele) {
+    const char *k = ele.kind == var ? " var" :
+        ele.kind == func ? "func" :
+            ele.kind == cons ? "cons" : "para";
+    const char *t = ele.type == t_int ? " int" :
+        ele.type == t_char ? "char" : "void";
+    char s[60];
+    sprintf(s, "|%10s|\t%s|\t%s|\t%3d|", ele.ident, k, t, ele.length);
+    out << s;
+    return out;
+}
+
+
 TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev) {
     TAB_ELEMENT t;
     strcpy(t.ident, ident);
@@ -22,12 +36,11 @@ TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, 
     t.type = type;
     t.value = value;
     t.length = length;
-    t.func_display_num = -1;
     if(lev) local_tab[display].push_back(t);
     else global_tab.push_back(t);
     // if function, new display area
     if(kind == func) {
-        t.func_display_num = ++display;
+        t.value = ++display;
         local_tab.push_back(vector<TAB_ELEMENT>());
         offset = FUNC_OFFSET;
     }
@@ -58,7 +71,6 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
                 strcpy(element->ident, iter->ident);
                 element->value = iter->value;
                 element->length = iter->length;
-                element->func_display_num = iter->func_display_num;
             }
             return 1;
         }
@@ -67,15 +79,23 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
 }
 
 void show_tables() {
-    cout << "global_table: " << endl;
+    char tab_head[60];
+    sprintf(tab_head, "|%10s|\t%4s|\t%4s|\t%3s|", "ident", "kind", "type", "len");
+    cout << endl << "global_table: " << endl;
+    cout << " ---------------------------------- " << endl;
+    cout << tab_head << endl;
+    cout << " ---------------------------------- " << endl;
     for(int i = 0; i < global_tab.size(); i++)
-        cout << global_tab[i].ident << endl;
-    cout << "local_table: " << endl;
+        cout << global_tab[i] << endl;
+    cout << " ---------------------------------- " << endl << endl << "local_table: " << endl;
+    cout << " ---------------------------------- " << endl;
+    cout << tab_head << endl;
     for (int i = 0; i < local_tab.size(); i++){
-        cout << "display " << i << endl;
+        cout << " -----------------" << i << "---------------- " << endl;
         for (int j = 0; j < local_tab[i].size(); j++)
-            cout << local_tab[i][j].ident << endl;
+            cout << local_tab[i][j] << endl;
     }
+    cout << " ---------------------------------- " << endl;
 }
 
 /*

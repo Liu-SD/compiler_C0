@@ -28,3 +28,7 @@ static char *errormessages[] = {
 extern std::vector<ERROR> errorlist;
 extern void showerrormessages();
 extern void error(int i);
+
+extern void tmp_error(char *s);
+
+extern void where(bool inout, char *s);

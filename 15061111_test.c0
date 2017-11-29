@@ -1,9 +1,11 @@
-const int _a1 = 0, a2_ = -2, a_3 = +3;
+const int a2_ = -2, a_3 = +35;
 const char b1 = 'b', b2 = 'c';
+
+int _a1;
 
 int array[100], length;
 
-int printArray() {
+int printArray {
     int A;
     a = 1;
     if(length >= 1){
@@ -45,13 +47,14 @@ void quickSort(int head, int tail) {
 
 void main() {
     int i;
+    _a1 = 0;
     i = 0;
     printf("this is a quick sort, input count of numbers in the first line:");
     scanf(length);
     if(length != 0) {
         length = (length + length * length) / length - 1;
-    }
-    printf("input your raw array, split numbers with space:")
+    } else{;}
+    printf("input your raw array, split numbers with space:");
     while (i < length) {
         scanf(array[i]);
         i = i + 1;

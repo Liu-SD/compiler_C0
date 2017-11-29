@@ -3,7 +3,11 @@
 
 using namespace std;
 
-SYMBOL_TYPE global_type;
+/*
+global_tabelement指针指向状态B或状态F中读到并放到全局符号表中的元素。
+如果是函数，它将会在状态E中被修改length，即参数个数。
+如果是变量，它将向状态D提供变量的类型(t_int or t_char)，用于逗号后面的变量填表。
+*/
 TAB_ELEMENT* global_tabelement;
 
 void stat_A() {
@@ -20,23 +24,11 @@ void stat_C() {
 }
 
 void stat_D() {
-    global_varDelclare(global_tabelement->type);
+    global_varDeclare(global_tabelement->type);
 }
 
 void stat_E() {
-    // TODO
-    if(sym == lsmall) {
-        while(sym != rsmall)nextSym();
-    }
-    nextSym();
-    if(sym != lbig) cout << "error here" << endl;
-    int i = 1;
-    while(i) {
-        nextSym();
-        if(sym == lbig) i++;
-        if(sym == rbig) i--;
-    }
-    nextSym();
+    global_funcDeclare(global_tabelement);
 }
 
 void stat_F() {
@@ -44,29 +36,21 @@ void stat_F() {
 }
 
 void stat_G() {
-    // TODO
     global_tabelement = global_varOrFunc();
     if(global_tabelement->kind != func) cout << "no var after function declaration" << endl;
 }
 
 void stat_H() {
-    // TODO
     nextSym();
-    nextSym();
-    nextSym();
-    int i = 1;
-    while(i) {
-        nextSym();
-        if(sym == lbig) i++;
-        if(sym == rbig) i--;
-    }
+    global_funcDeclare(global_tabelement);
 }
 
 void NFA_program() {
+    where(true, "NFA_program");
     typedef enum {A, B, C, D, E, F, G, H} STAT;
     STAT status = A;
     while(status != H) {
-        cout << char(status + 'A') << endl;
+        //cout << char(status + 'A') << endl;
         switch (status) {
 
         case A:
@@ -134,6 +118,8 @@ void NFA_program() {
                 status = E;
                 stat_E();
             } else cout << "error in status G" << endl;
+            break;
         }
     }
+    where(false, "NFA_program");
 }

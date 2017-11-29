@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 // using namespace std;
 
@@ -32,4 +33,22 @@ void error(int i) {
         skip_current_line();
     }
     */
+}
+
+void tmp_error(char *s) {
+    std::cout << s << std::endl;
+}
+
+void where(bool inout, char *s) {
+    static int layer = 0;
+    using namespace std;
+    if(inout){
+        for (int i = 0; i < layer; i++)cout << "  ";
+        cout << "Enter <" << s << ">" << endl;
+        layer++;
+    }else {
+        layer--;
+        for (int i = 0; i <layer; i++) cout << "  ";
+        cout << "Leave <" << s << ">" << endl;
+    }
 }

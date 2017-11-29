@@ -18,12 +18,12 @@ vector<string> mcode;
 
 ostream &operator << (ostream &out, TAB_ELEMENT ele) {
     const char *k = ele.kind == var ? " var" :
-        ele.kind == func ? "func" :
-            ele.kind == cons ? "cons" : "para";
+                    ele.kind == func ? "func" :
+                    ele.kind == cons ? "cons" : "para";
     const char *t = ele.type == t_int ? " int" :
-        ele.type == t_char ? "char" : "void";
+                    ele.type == t_char ? "char" : "void";
     char s[60];
-    sprintf(s, "|%10s|\t%s|\t%s|\t%3d|", ele.ident, k, t, ele.length);
+    sprintf(s, "|%10s|\t%s|\t%s|\t%3d|\t%3d|", ele.ident, k, t, ele.length, ele.value);
     out << s;
     return out;
 }
@@ -36,8 +36,7 @@ TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, 
     t.type = type;
     t.value = value;
     t.length = length;
-    if(lev) local_tab[display].push_back(t);
-    else global_tab.push_back(t);
+
     // if function, new display area
     if(kind == func) {
         t.value = ++display;
@@ -45,13 +44,21 @@ TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, 
         offset = FUNC_OFFSET;
     }
 
-    // if parameter or variable, add offset
+    // if parameter or variable, raise offset
     if(kind == para || kind == var) {
         t.value = offset;
         if(length) offset += length;
         else ++offset;
     }
-    return &t;
+
+    if(lev) {
+        local_tab[display].push_back(t);
+        return &*(local_tab[display].end() - 1);
+    } else {
+        global_tab.push_back(t);
+        return &*(global_tab.end() - 1);
+    }
+
 }
 
 int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
@@ -80,22 +87,22 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
 
 void show_tables() {
     char tab_head[60];
-    sprintf(tab_head, "|%10s|\t%4s|\t%4s|\t%3s|", "ident", "kind", "type", "len");
+    sprintf(tab_head, "|%10s|\t%4s|\t%4s|\t%3s|\t%3s|", "ident", "kind", "type", "len", "val");
     cout << endl << "global_table: " << endl;
-    cout << " ---------------------------------- " << endl;
+    cout << " ------------------------------------------ " << endl;
     cout << tab_head << endl;
-    cout << " ---------------------------------- " << endl;
+    cout << " ------------------------------------------ " << endl;
     for(int i = 0; i < global_tab.size(); i++)
         cout << global_tab[i] << endl;
-    cout << " ---------------------------------- " << endl << endl << "local_table: " << endl;
-    cout << " ---------------------------------- " << endl;
+    cout << " ------------------------------------------ " << endl << endl << "local_table: " << endl;
+    cout << " ------------------------------------------ " << endl;
     cout << tab_head << endl;
-    for (int i = 0; i < local_tab.size(); i++){
-        cout << " -----------------" << i << "---------------- " << endl;
+    for (int i = 0; i < local_tab.size(); i++) {
+        cout << " --------------------" << i << "--------------------- " << endl;
         for (int j = 0; j < local_tab[i].size(); j++)
             cout << local_tab[i][j] << endl;
     }
-    cout << " ---------------------------------- " << endl;
+    cout << " ------------------------------------------ " << endl;
 }
 
 /*

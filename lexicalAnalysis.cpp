@@ -42,7 +42,7 @@ void nextCh() {
 void set_file_stream(char * filepath) {
     fin = new std::ifstream(filepath);
     if(!*fin) {
-        error(3);
+        error(27);
     }
     lc = 0;
     cc = 0;
@@ -51,7 +51,7 @@ void set_file_stream(char * filepath) {
 
 
 void nextSym() {
-    if(sym == eof) error(2);
+    if(sym == eof) error(26);
 
     while(isblank(ch)) nextCh();
 

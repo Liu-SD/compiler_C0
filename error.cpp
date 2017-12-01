@@ -9,11 +9,19 @@
 
 std::vector<ERROR> errorlist;
 
+const bool debug = true;
+
 void showerrormessages() {
-    printf("\nerror messages of program:\n");
+    if(!errorlist.size())
+        return;
+    std::cout << std::endl << "error messages of program:" << std:: endl;
     for(int i = 0; i < errorlist.size(); i++) {
         ERROR e = errorlist[i];
-        printf("%2d : line: %d, position: %d \"%s\" %s\n", i, e.errline, e.errpos, e.linecontent, errormessages[e.errcode]);
+        std::cout << i << "  line " << e.errline
+                  << ", position " << e.errpos << std::endl
+                  << e.linecontent << errormessages[e.errcode]
+                  << std::endl << std::endl;
+        // printf("%2d : line: %d, position: %d \"%s\" %s\n", i, e.errline, e.errpos, e.linecontent, errormessages[e.errcode]);
     }
 }
 
@@ -24,29 +32,23 @@ void error(int i) {
     err.errpos = cc - 1;
     strcpy(err.linecontent, current_line);
     errorlist.push_back(err);
-    if(i >= SHUT_DOWN) {
+    if(debug || i >= SHUT_DOWN) {
         showerrormessages();
         exit(-1);
     }
-    /*
-    else {
-        skip_current_line();
-    }
-    */
 }
 
-void tmp_error(char *s) {
-    std::cout << s << std::endl;
-}
+
 
 void where(bool inout, char *s) {
+    //return;
     static int layer = 0;
     using namespace std;
-    if(inout){
+    if(inout) {
         for (int i = 0; i < layer; i++)cout << "  ";
         cout << "Enter <" << s << ">" << endl;
         layer++;
-    }else {
+    } else {
         layer--;
         for (int i = 0; i <layer; i++) cout << "  ";
         cout << "Leave <" << s << ">" << endl;

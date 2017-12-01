@@ -19,24 +19,24 @@ bool statementBeginSym(SYMBOL sym) {
 void compoundStatement(TAB_ELEMENT *tab) {
     where(true, "compoundStatement");
     // TODO
-    // 1. constÉùÃ÷
+    // 1. constå£°æ˜
     while(sym == constsy)
         constDeclare(1, tab);
-    // 2. ¾Ö²¿±äÁ¿ÉùÃ÷
+    // 2. å±€éƒ¨å˜é‡å£°æ˜
     while(sym == intsy || sym == charsy)
         local_varDeclare(tab);
 
-        /*
+    /*
     int i = 1;
     while(i) {
-        nextSym();
-        if(sym == lbig)i++;
-        if(sym == rbig)i--;
+    nextSym();
+    if(sym == lbig)i++;
+    if(sym == rbig)i--;
     }
     return;
 
-*/
-    // 3. µ÷ÓÃstatement
+    */
+    // 3. è°ƒç”¨statement
     statementArray(tab);
     where(false, "compoundStatement");
 }
@@ -73,12 +73,17 @@ void statement(TAB_ELEMENT *tab) {
                 callStatement(tab);
                 break;
             case cons:
-                cout << "69const type can't be left value" << endl;
+                error(19);
                 while(sym != semicolon)nextSym();
                 nextSym();
                 break;
             }
-        } else cout << "74ident not defined" << endl;
+        } else {
+            error(20);
+            do
+                nextSym();
+            while(!statementBeginSym(sym));
+        }
         break;
     case mainsy:
         callStatement(tab);
@@ -98,8 +103,9 @@ void statement(TAB_ELEMENT *tab) {
     case lbig:
         nextSym();
         statementArray(tab);
-        if(sym != rbig) cout << "94should end with right brace" << endl;
-        else nextSym();
+        if(sym != rbig) {
+            error(21);
+        } else nextSym();
         break;
     }
     where(false, "statement");
@@ -110,8 +116,10 @@ void statement(TAB_ELEMENT *tab) {
 void ifStatement(TAB_ELEMENT *tab) {
     where(true, "ifStatement");
     nextSym();
-    if(sym != lsmall) cout << "103should be left parent" << endl;
-    nextSym();
+    if(sym != lsmall) {
+        error(22);
+    } else
+        nextSym();
     SYMBOL_TYPE exptype;
     expression(exptype, NULL);
     if(sym == lss || sym == leq || sym == eql || sym == neq|| sym == grq || sym == gtr) {
@@ -119,10 +127,14 @@ void ifStatement(TAB_ELEMENT *tab) {
         expression(exptype, NULL);
     }
 
-    if(sym != rsmall) cout << "108should be right parent" << endl;
-    nextSym();
+    if(sym != rsmall) {
+        error(17);
+    } else
+        nextSym();
     statement(tab);
-    if(sym != elsesy) cout << "111should be else" << endl;
+    if(sym != elsesy) {
+        error(23);
+    }
     nextSym();
     statement(tab);
     where(false, "ifStatement");
@@ -131,16 +143,18 @@ void ifStatement(TAB_ELEMENT *tab) {
 void whileStatement(TAB_ELEMENT *tab) {
     where(true, "whileStatement");
     nextSym();
-    if (sym != lsmall) cout << "118should be left parent" << endl;
-    nextSym();
+    if (sym != lsmall) {
+        error(22);
+    } else nextSym();
     SYMBOL_TYPE exptype;
     expression(exptype, NULL);
     if(sym == lss || sym == leq || sym == eql || sym == grq || sym == gtr) {
         nextSym();
         expression(exptype, NULL);
     }
-    if(sym != rsmall) cout << "123should be right parent" << endl;
-    nextSym();
+    if(sym != rsmall) {
+        error(17);
+    } else nextSym();
     statement(tab);
     where(false, "whileStatement");
 }
@@ -148,31 +162,43 @@ void whileStatement(TAB_ELEMENT *tab) {
 void switchStatement(TAB_ELEMENT *tab) {
     where(true, "switchStatement");
     nextSym();
-    if(sym != lsmall) cout << "130should be left parent" << endl;
-    nextSym();
+    if(sym != lsmall) {
+        error(22);
+    } else nextSym();
     SYMBOL_TYPE exptype;
     expression(exptype, NULL);
-    if(sym != rsmall) cout << "134should be right parent" << endl;
-    nextSym();
-    if(sym != lbig) cout << "136should be left brace" << endl;
-    nextSym();
-    if(sym != casesy) cout << "139should be case" << endl;
+    if(sym != rsmall) {
+        error(17);
+    } else nextSym();
+    if(sym != lbig) {
+        error(18);
+    } else nextSym();
+    if(sym != casesy) {
+        error(24);
+    }
     do {
         nextSym();
-        if(sym != charcon && sym != intcon) cout << "142should be ident" << endl;
-        nextSym();
-        if(sym != colon) cout << "144should be colon" << endl;
-        nextSym();
+        if(sym != charcon && sym != intcon) {
+            error(11);
+            error(13);
+        } else nextSym();
+        if(sym != colon) {
+            error(25);
+        } else
+            nextSym();
         statement(tab);
     } while(sym == casesy);
-        if(sym == defaultsy) {
+    if(sym == defaultsy) {
+        nextSym();
+        if(sym != colon) {
+            error(25);
+        } else
             nextSym();
-            if(sym != colon)cout << "150should be colon" << endl;
-            nextSym();
-            statement(tab);
-        }
-    if(sym != rbig) cout << "154switch should end with right brace" << endl;
-    nextSym();
+        statement(tab);
+    }
+    if(sym != rbig) {
+        error(21);
+    } else nextSym();
     where(false, "switchStatement");
 }
 
@@ -185,7 +211,20 @@ void scanfStatement(TAB_ELEMENT *tab) {
 
 void printfStatement(TAB_ELEMENT *tab) {
     where(true, "printfStatement");
-    while(sym != semicolon) nextSym();
+    SYMBOL_TYPE t;
+    nextSym();
+    nextSym();
+    if(sym == stringcon) {
+        nextSym();
+        if(sym == comma) {
+            nextSym();
+            expression(t, NULL);
+        }
+
+    } else {
+        expression(t, NULL);
+    }
+    nextSym();
     nextSym();
     where(false, "printfStatement");
 }
@@ -209,8 +248,14 @@ void callStatement(TAB_ELEMENT *tab) {
 
 void returnStatement(TAB_ELEMENT *tab) {
     where(true, "returnStatement");
-    while(sym != semicolon) nextSym();
-    nextSym();
+    SYMBOL_TYPE t;
+    nextSym(); // returnsy
+    if(sym != semicolon) {
+        nextSym(); // left parent
+        expression(t, NULL);
+        nextSym(); // right parent
+    }
+    nextSym(); // semi
     where(false, "returnStatement");
 }
 
@@ -250,13 +295,12 @@ void factor(SYMBOL_TYPE &type, char* res) {
                 if(lkup.length) {
                     nextSym();
                     do {
-                        expression(t, NULL);
                         nextSym();
+                        expression(t, NULL);
                     } while(sym == comma);
                 }
                 nextSym();
-            }
-            else if(lkup.kind == var || lkup.kind == para) {
+            } else if(lkup.kind == var || lkup.kind == para) {
                 if(lkup.length) {
                     nextSym();
                     nextSym();
@@ -264,7 +308,17 @@ void factor(SYMBOL_TYPE &type, char* res) {
                 }
                 nextSym();
             } else if(lkup.kind == cons) nextSym();
-        } else cout << "228ident not defined" << endl;
+        } else {
+            error(20);
+            nextSym();
+            if(sym == lsmall) {
+                while(sym != rsmall)nextSym();
+                nextSym();
+            } else if(sym == lmedium) {
+                while(sym != rmedium)nextSym();
+                nextSym();
+            }
+        }
         break;
     case pluscon:
     case minuscon:

@@ -4,9 +4,9 @@
 using namespace std;
 
 /*
-global_tabelementÖ¸ÕëÖ¸Ïò×´Ì¬B»ò×´Ì¬FÖÐ¶Áµ½²¢·Åµ½È«¾Ö·ûºÅ±íÖÐµÄÔªËØ¡£
-Èç¹ûÊÇº¯Êý£¬Ëü½«»áÔÚ×´Ì¬EÖÐ±»ÐÞ¸Älength£¬¼´²ÎÊý¸öÊý¡£
-Èç¹ûÊÇ±äÁ¿£¬Ëü½«Ïò×´Ì¬DÌá¹©±äÁ¿µÄÀàÐÍ(t_int or t_char)£¬ÓÃÓÚ¶ººÅºóÃæµÄ±äÁ¿Ìî±í¡£
+global_tabelementæŒ‡é’ˆæŒ‡å‘çŠ¶æ€Bæˆ–çŠ¶æ€Fä¸­è¯»åˆ°å¹¶æ”¾åˆ°å…¨å±€ç¬¦å·è¡¨ä¸­çš„å…ƒç´ ã€‚
+å¦‚æžœæ˜¯å‡½æ•°ï¼Œå®ƒå°†ä¼šåœ¨çŠ¶æ€Eä¸­è¢«ä¿®æ”¹lengthï¼Œå³å‚æ•°ä¸ªæ•°ã€‚
+å¦‚æžœæ˜¯å˜é‡ï¼Œå®ƒå°†å‘çŠ¶æ€Dæä¾›å˜é‡çš„ç±»åž‹(t_int or t_char)ï¼Œç”¨äºŽé€—å·åŽé¢çš„å˜é‡å¡«è¡¨ã€‚
 */
 TAB_ELEMENT* global_tabelement;
 
@@ -37,7 +37,7 @@ void stat_F() {
 
 void stat_G() {
     global_tabelement = global_varOrFunc();
-    if(global_tabelement->kind != func) cout << "no var after function declaration" << endl;
+    if(global_tabelement->kind != func) error(2);
 }
 
 void stat_H() {
@@ -50,9 +50,8 @@ void NFA_program() {
     typedef enum {A, B, C, D, E, F, G, H} STAT;
     STAT status = A;
     while(status != H) {
-        //cout << char(status + 'A') << endl;
+        // cout << char(status + 'A') << endl;
         switch (status) {
-
         case A:
             if(sym == constsy) {
                 status = A;
@@ -63,7 +62,10 @@ void NFA_program() {
             } else if(sym == intsy || sym == charsy) {
                 status = B;
                 stat_B();
-            } else cout << "error in status A" << endl;
+            } else {
+                error(3);
+                // skip to [constsy, voidsy, intsy, charsy]
+            }
             break;
 
         case B:
@@ -73,7 +75,10 @@ void NFA_program() {
             } else if(sym == lsmall || sym == lbig) {
                 status = E;
                 stat_E();
-            } else cout << "error in status B" << endl;
+            } else {
+                error(4);
+                // skip to [comma, semicolon, lsmall, lbig]
+            }
             break;
 
         case C:
@@ -83,7 +88,10 @@ void NFA_program() {
             } else if(sym == ident) {
                 status = F;
                 stat_F();
-            } else cout << "error in status C" << endl;
+            } else {
+                error(5);
+                // skip to [ident]
+            }
             break;
 
         case D:
@@ -93,7 +101,10 @@ void NFA_program() {
             } else if(sym == intsy || sym == charsy) {
                 status = B;
                 stat_B();
-            } else cout << "error in status D" << endl;
+            } else {
+                error(6);
+                // skip to [intsy, charsy, voidsy]
+            }
             break;
 
         case E:
@@ -103,21 +114,30 @@ void NFA_program() {
             } else if(sym == intsy || charsy) {
                 status = G;
                 stat_G();
-            } else cout << "error in status E" << endl;
+            } else {
+                error(6);
+                // skip to [intsy, charsy, voidsy]
+            }
             break;
 
         case F:
             if(sym == lsmall || sym == lbig) {
                 status = E;
                 stat_E();
-            } else cout << "error in status F" << endl;
+            } else {
+                error(7);
+                // skip to [lsmall, lbig, intsy, charsy, statementbeg]
+            }
             break;
 
         case G:
             if(sym == lsmall || sym == lbig) {
                 status = E;
                 stat_E();
-            } else cout << "error in status G" << endl;
+            } else {
+                error(7);
+                // skip to [lsmall, lbig, intsy, charsy, statemetnbeg]
+            }
             break;
         }
     }

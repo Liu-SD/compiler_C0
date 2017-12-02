@@ -3,6 +3,7 @@
 #include "lexicalAnalysis.h"
 #include "symbolTable.h"
 #include "statement.h"
+#include "mcode.h"
 
 extern void constDeclare(int lev);
 extern void constDeclare(int lev, TAB_ELEMENT *tab);

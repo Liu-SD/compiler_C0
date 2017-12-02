@@ -3,6 +3,8 @@
 #include <set>
 #include <iostream>
 
+#define isCompareOp(x) ((sym) == lss || (sym) == leq || (sym) == eql || (sym) == neq|| (sym) == grq || (sym) == gtr)
+
 using namespace std;
 
 
@@ -103,16 +105,19 @@ void statement(TAB_ELEMENT *tab) {
 
 void ifStatement(TAB_ELEMENT *tab) {
     where(true, "ifStatement");
+
+    // temp
     nextSym();
     if(sym != lsmall) {
         error(22);
     } else
         nextSym();
     SYMBOL_TYPE exptype;
-    expression(exptype, NULL);
-    if(sym == lss || sym == leq || sym == eql || sym == neq|| sym == grq || sym == gtr) {
+    std::string s;
+    expression(exptype, s);
+    if(isCompareOp(sym)) {
         nextSym();
-        expression(exptype, NULL);
+        expression(exptype, s);
     }
 
     if(sym != rsmall) {
@@ -125,6 +130,7 @@ void ifStatement(TAB_ELEMENT *tab) {
     }
     nextSym();
     statement(tab);
+
     where(false, "ifStatement");
 }
 
@@ -135,10 +141,11 @@ void whileStatement(TAB_ELEMENT *tab) {
         error(22);
     } else nextSym();
     SYMBOL_TYPE exptype;
-    expression(exptype, NULL);
-    if(sym == lss || sym == leq || sym == eql || sym == grq || sym == gtr) {
+    std::string s;
+    expression(exptype, s);
+    if(isCompareOp(sym)) {
         nextSym();
-        expression(exptype, NULL);
+        expression(exptype, s);
     }
     if(sym != rsmall) {
         error(17);
@@ -154,7 +161,8 @@ void switchStatement(TAB_ELEMENT *tab) {
         error(22);
     } else nextSym();
     SYMBOL_TYPE exptype;
-    expression(exptype, NULL);
+    std::string s;
+    expression(exptype, s);
     if(sym != rsmall) {
         error(17);
     } else nextSym();
@@ -200,17 +208,18 @@ void scanfStatement(TAB_ELEMENT *tab) {
 void printfStatement(TAB_ELEMENT *tab) {
     where(true, "printfStatement");
     SYMBOL_TYPE t;
+    std::string s;
     nextSym();
     nextSym();
     if(sym == stringcon) {
         nextSym();
         if(sym == comma) {
             nextSym();
-            expression(t, NULL);
+            expression(t, s);
         }
 
     } else {
-        expression(t, NULL);
+        expression(t, s);
     }
     nextSym();
     nextSym();
@@ -222,7 +231,8 @@ void assignStatement(TAB_ELEMENT *tab) {
     while(sym != becomes) nextSym();
     nextSym();
     SYMBOL_TYPE exptype;
-    expression(exptype, NULL);
+    std::string s;
+    expression(exptype, s);
     nextSym();
     where(false, "assignStatement");
 }
@@ -237,10 +247,11 @@ void callStatement(TAB_ELEMENT *tab) {
 void returnStatement(TAB_ELEMENT *tab) {
     where(true, "returnStatement");
     SYMBOL_TYPE t;
+    std::string s;
     nextSym(); // returnsy
     if(sym != semicolon) {
         nextSym(); // left parent
-        expression(t, NULL);
+        expression(t, s);
         nextSym(); // right parent
     }
     nextSym(); // semi
@@ -249,32 +260,35 @@ void returnStatement(TAB_ELEMENT *tab) {
 
 
 
-void expression(SYMBOL_TYPE &type, char* res) {
+void expression(SYMBOL_TYPE &type, std::string &res) {
     where(true, "expression");
     if(sym == pluscon || sym == minuscon) nextSym();
     SYMBOL_TYPE t;
-    term(t, NULL);
+    std::string s;
+    term(t, s);
     while(sym == pluscon || sym == minuscon) {
         nextSym();
-        term(t, NULL);
+        term(t, s);
     }
     where(false, "expression");
 }
 
-void term(SYMBOL_TYPE &type, char* res) {
+void term(SYMBOL_TYPE &type, std::string &res) {
     where(true, "term");
     SYMBOL_TYPE t;
-    factor(t, NULL);
+    std::string s;
+    factor(t, s);
     while(sym == timescon || sym == divcon) {
         nextSym();
-        factor(t, NULL);
+        factor(t, s);
     }
     where(false, "term");
 }
 
-void factor(SYMBOL_TYPE &type, char* res) {
+void factor(SYMBOL_TYPE &type, std::string &res) {
     where(true, "factor");
     SYMBOL_TYPE t;
+    std::string s;
     switch (sym) {
     case ident:
         TAB_ELEMENT lkup;
@@ -284,7 +298,7 @@ void factor(SYMBOL_TYPE &type, char* res) {
                     nextSym();
                     do {
                         nextSym();
-                        expression(t, NULL);
+                        expression(t, s);
                     } while(sym == comma);
                 }
                 nextSym();
@@ -292,7 +306,7 @@ void factor(SYMBOL_TYPE &type, char* res) {
                 if(lkup.length) {
                     nextSym();
                     nextSym();
-                    expression(t, NULL);
+                    expression(t, s);
                 }
                 nextSym();
             } else if(lkup.kind == cons) nextSym();
@@ -321,7 +335,7 @@ void factor(SYMBOL_TYPE &type, char* res) {
         break;
     case lsmall:
         nextSym();
-        expression(t, NULL);
+        expression(t, s);
         nextSym();
     }
     where(false, "factor");

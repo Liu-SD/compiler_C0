@@ -3,6 +3,8 @@
 #include "symbolTable.h"
 #include "error.h"
 #include "lexicalAnalysis.h"
+#include "mcode.h"
+#include <string>
 
 extern void constDeclare(int lev, TAB_ELEMENT *tab);
 extern void local_varDeclare(TAB_ELEMENT *tab);
@@ -20,6 +22,6 @@ extern void assignStatement(TAB_ELEMENT *tab);
 extern void callStatement(TAB_ELEMENT *tab);
 extern void returnStatement(TAB_ELEMENT *tab);
 
-extern void expression(SYMBOL_TYPE &type, char* res);
-extern void term(SYMBOL_TYPE &type, char* res);
-extern void factor(SYMBOL_TYPE &type, char* res);
+extern void expression(SYMBOL_TYPE &type, std::string &res);
+extern void term(SYMBOL_TYPE &type, std::string &res);
+extern void factor(SYMBOL_TYPE &type, std::string &res);

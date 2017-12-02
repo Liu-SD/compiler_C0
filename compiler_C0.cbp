@@ -41,6 +41,8 @@
 		<Unit filename="lexicalAnalysis.cpp" />
 		<Unit filename="lexicalAnalysis.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mcode.cpp" />
+		<Unit filename="mcode.h" />
 		<Unit filename="statement.cpp" />
 		<Unit filename="statement.h" />
 		<Unit filename="symbolTable.cpp" />

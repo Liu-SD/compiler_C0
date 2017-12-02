@@ -110,8 +110,11 @@ TAB_ELEMENT* global_varOrFunc() {
 
     if(sym == comma || sym == semicolon)
         return enter(token, var, type, length, 0, 0);
-    else if (sym == lsmall || sym == lbig)
+    else if (sym == lsmall || sym == lbig){
+
+        emit(type == t_int ? "int": "char", std::string(token) + "()");
         return enter(token, func, type, 0, 0, 0);
+    }
     else return NULL;
 }
 
@@ -140,6 +143,7 @@ void global_varDeclare(SYMBOL_TYPE type) {
             } else nextSym();
         }
         enter(token, var, type, length, 0, 0);
+
     }
     if(sym == semicolon)nextSym();
     else error(15);
@@ -181,7 +185,6 @@ void local_varDeclare(TAB_ELEMENT *tab) {
     where(false, "local_varDeclare");
 }
 
-
 void global_funcDeclare(TAB_ELEMENT *tab) {
     where(true, "global_funcDeclare");
     // TODO
@@ -205,6 +208,7 @@ void global_funcDeclare(TAB_ELEMENT *tab) {
                     error(12);
                 }
                 enter(token, para, t, 0, 0, 1);
+                emit("para", t == t_int ? "int": "char", std::string(token));
                 ++paracount;
                 nextSym();
             } while(sym == comma);

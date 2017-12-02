@@ -21,6 +21,7 @@ void stat_B() {
 void stat_C() {
     nextSym();
     global_tabelement = enter(token, func, t_void, 0, 0, 0);
+    emit("void", std::string(token) + "()");
 }
 
 void stat_D() {

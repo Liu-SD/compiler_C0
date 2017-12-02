@@ -18,24 +18,12 @@ bool statementBeginSym(SYMBOL sym) {
 
 void compoundStatement(TAB_ELEMENT *tab) {
     where(true, "compoundStatement");
-    // TODO
     // 1. const声明
     while(sym == constsy)
         constDeclare(1, tab);
     // 2. 局部变量声明
     while(sym == intsy || sym == charsy)
         local_varDeclare(tab);
-
-    /*
-    int i = 1;
-    while(i) {
-    nextSym();
-    if(sym == lbig)i++;
-    if(sym == rbig)i--;
-    }
-    return;
-
-    */
     // 3. 调用statement
     statementArray(tab);
     where(false, "compoundStatement");

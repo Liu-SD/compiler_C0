@@ -109,7 +109,7 @@ void show_lexical() {
 
 
 int main() {
-    set_file_stream("input(1).txt");
+    set_file_stream("15061111_test.c0");
     nextSym();
     NFA_program();
     show_tables();

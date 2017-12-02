@@ -15,7 +15,7 @@ void constDeclare(int lev, TAB_ELEMENT* tab) {
             nextSym();
             if(sym != ident) {
                 error(9);
-                token[0] = 0; // correct to a null token
+                token[0] = 0; // change to a null token
             }
             nextSym();
             if(sym != becomes) {

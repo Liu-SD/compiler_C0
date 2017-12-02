@@ -106,31 +106,65 @@ void statement(TAB_ELEMENT *tab) {
 void ifStatement(TAB_ELEMENT *tab) {
     where(true, "ifStatement");
 
-    // temp
     nextSym();
     if(sym != lsmall) {
         error(22);
     } else
         nextSym();
-    SYMBOL_TYPE exptype;
-    std::string s;
-    expression(exptype, s);
+
+    // compare expression
+    SYMBOL_TYPE type_left;
+    std::string name_left;
+    expression(type_left, name_left);
+    std::string jump_to_else = newLabel();
     if(isCompareOp(sym)) {
+        SYMBOL op = sym;
         nextSym();
-        expression(exptype, s);
+        SYMBOL_TYPE type_right;
+        std::string name_right;
+        expression(type_right, name_right);
+        std::string t = newTmpVar();
+        emit(t, name_left, "-", name_right);
+        switch (op) {
+        case lss:
+            emit("GTEZ", t, jump_to_else);
+            break;
+        case leq:
+            emit("GTZ", t, jump_to_else);
+            break;
+        case eql:
+            emit("BNEZ", t, jump_to_else);
+            break;
+        case neq:
+            emit("BEZ", t, jump_to_else);
+            break;
+        case grq:
+            emit("LTZ", t, jump_to_else);
+            break;
+        case gtr:
+            emit("LTEZ", t, jump_to_else);
+            break;
+        }
+    } else {
+        emit("BEZ", name_left, jump_to_else);
     }
+
+    // end compare expression
 
     if(sym != rsmall) {
         error(17);
     } else
         nextSym();
     statement(tab);
+    std::string jump_to_end = newLabel();
+    emit("JMP", jump_to_end);
+    setLabelVal(jump_to_else, mcode_lc());
     if(sym != elsesy) {
         error(23);
     }
     nextSym();
     statement(tab);
-
+    setLabelVal(jump_to_end, mcode_lc());
     where(false, "ifStatement");
 }
 
@@ -140,17 +174,58 @@ void whileStatement(TAB_ELEMENT *tab) {
     if (sym != lsmall) {
         error(22);
     } else nextSym();
-    SYMBOL_TYPE exptype;
-    std::string s;
-    expression(exptype, s);
+
+    std::string beforeCompare = newLabel();
+    setLabelVal(beforeCompare, mcode_lc());
+
+    // compare expression
+    SYMBOL_TYPE type_left;
+    std::string name_left;
+    expression(type_left, name_left);
+    std::string jump_to_end = newLabel();
     if(isCompareOp(sym)) {
+        SYMBOL op = sym;
         nextSym();
-        expression(exptype, s);
+        SYMBOL_TYPE type_right;
+        std::string name_right;
+        expression(type_right, name_right);
+        std::string t = newTmpVar();
+        emit(t, name_left, "-", name_right);
+        switch (op) {
+        case lss:
+            emit("GTEZ", t, jump_to_end);
+            break;
+        case leq:
+            emit("GTZ", t, jump_to_end);
+            break;
+        case eql:
+            emit("BNEZ", t, jump_to_end);
+            break;
+        case neq:
+            emit("BEZ", t, jump_to_end);
+            break;
+        case grq:
+            emit("LTZ", t, jump_to_end);
+            break;
+        case gtr:
+            emit("LTEZ", t, jump_to_end);
+            break;
+        }
+    } else {
+        emit("BEZ", name_left, jump_to_end);
     }
+
+    // end compare expression
+
+
+
     if(sym != rsmall) {
         error(17);
     } else nextSym();
     statement(tab);
+
+    emit("JMP", beforeCompare);
+    setLabelVal(jump_to_end, mcode_lc());
     where(false, "whileStatement");
 }
 

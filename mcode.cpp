@@ -6,7 +6,9 @@
 std::map<std::string, int> label_tab;
 std::vector<std::string> code_tab;
 
-int mcode_lc() {return code_tab.size();}
+int mcode_lc() {
+    return code_tab.size();
+}
 
 std::string int2str(int i) {
     char s[10];
@@ -25,7 +27,7 @@ std::string newLabel() {
 }
 
 int setLabelVal(std::string label, int val) {
-    if(label_tab.find(label) != label_tab.end()){
+    if(label_tab.find(label) != label_tab.end()) {
         label_tab[label] = val;
         return 1;
     }

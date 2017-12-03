@@ -111,7 +111,7 @@ TAB_ELEMENT* global_varOrFunc() {
     if(sym == comma || sym == semicolon)
         return enter(token, var, type, length, 0, 0);
     else if (sym == lsmall || sym == lbig) {
-
+        emit("");
         emit(type == t_int ? "int": "char", std::string(token) + "()");
         return enter(token, func, type, 0, 0, 0);
     } else return NULL;

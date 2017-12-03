@@ -7,6 +7,8 @@
 
 using namespace std;
 
+bool returnExist;
+
 
 bool statementBeginSym(SYMBOL sym) {
     static SYMBOL l[] = {
@@ -20,6 +22,7 @@ bool statementBeginSym(SYMBOL sym) {
 
 void compoundStatement(TAB_ELEMENT *tab) {
     where(true, "compoundStatement");
+    returnExist = false;
     // 1. const声明
     while(sym == constsy)
         constDeclare(1, tab);
@@ -28,6 +31,8 @@ void compoundStatement(TAB_ELEMENT *tab) {
         local_varDeclare(tab);
     // 3. 调用statement
     statementArray(tab);
+    if(tab->type != t_void && !returnExist)
+        error(27);
     where(false, "compoundStatement");
 }
 
@@ -235,9 +240,9 @@ void switchStatement(TAB_ELEMENT *tab) {
     if(sym != lsmall) {
         error(22);
     } else nextSym();
-    SYMBOL_TYPE exptype;
-    std::string s;
-    expression(exptype, s);
+    SYMBOL_TYPE type_switch;
+    std::string name_switch;
+    expression(type_switch, name_switch);
     if(sym != rsmall) {
         error(17);
     } else nextSym();
@@ -247,26 +252,63 @@ void switchStatement(TAB_ELEMENT *tab) {
     if(sym != casesy) {
         error(24);
     }
+    std::string jump_to_next_case;
+    std::string jump_to_end = newLabel();
     do {
         nextSym();
-        if(sym != charcon && sym != intcon) {
+
+        if(!jump_to_next_case.empty())
+            setLabelVal(jump_to_next_case, mcode_lc());
+        jump_to_next_case = newLabel();
+
+        int signal = 1;
+        if(sym == pluscon || sym == minuscon) {
+            if(sym == minuscon) signal = -1;
+            nextSym();
+            if(sym != intcon || num == 0)
+                error(11);
+        }
+        if(sym == intcon || sym == charcon) {
+            if(signal == -1) {
+                std::string t0 = newTmpVar();
+                emit(t0, int2str(-1), "*", name_switch);
+                std::string t1 = newTmpVar();
+                emit(t1, t0, "-", int2str(num));
+                emit("BNEZ", t1, jump_to_next_case);
+            } else {
+                std::string t0 = newTmpVar();
+                emit(t0, name_switch, "-", int2str(num));
+                emit("BNEZ", t0, jump_to_next_case);
+            }
+            nextSym();
+        } else {
             error(11);
             error(13);
-        } else nextSym();
+        }
+
+
         if(sym != colon) {
             error(25);
         } else
             nextSym();
         statement(tab);
+        emit("JMP", jump_to_end);
+
+
     } while(sym == casesy);
     if(sym == defaultsy) {
+        setLabelVal(jump_to_next_case, mcode_lc());
+
         nextSym();
         if(sym != colon) {
             error(25);
         } else
             nextSym();
         statement(tab);
+    } else {
+        setLabelVal(jump_to_next_case, mcode_lc());
     }
+    setLabelVal(jump_to_end, mcode_lc());
     if(sym != rbig) {
         error(21);
     } else nextSym();
@@ -275,26 +317,59 @@ void switchStatement(TAB_ELEMENT *tab) {
 
 void scanfStatement(TAB_ELEMENT *tab) {
     where(true, "scanfStatement");
-    while(sym != semicolon) nextSym();
     nextSym();
+    if(sym != lsmall)
+        error(22);
+    do {
+        TAB_ELEMENT ele;
+        nextSym();
+        if(sym != ident)
+            error(9);
+        else if(!lookup(token, true, &ele) && !lookup(token, false, &ele))
+            error(20);
+        else if(ele.kind != para && ele.kind != var)
+            error(19);
+        else if(ele.length)
+            error(28);
+        else
+            emit("SCANF", token);
+        nextSym();
+    } while(sym == comma);
+    if(sym != rsmall)
+        error(17);
+    else
+        nextSym();
+    if(sym != semicolon)
+        error(15);
+    else
+        nextSym();
     where(false, "scnafStatement");
 }
 
 void printfStatement(TAB_ELEMENT *tab) {
     where(true, "printfStatement");
-    SYMBOL_TYPE t;
-    std::string s;
+    SYMBOL_TYPE type_exp;
+    std::string name_exp;
     nextSym();
     nextSym();
     if(sym == stringcon) {
+        emit("PRINTFS", "<" + std::string(stringbuff) + ">");
         nextSym();
         if(sym == comma) {
             nextSym();
-            expression(t, s);
+            expression(type_exp, name_exp);
+            if(type_exp == t_char)
+                emit("PRINTFC", name_exp);
+            else
+                emit("PRINTFN", name_exp);
         }
 
     } else {
-        expression(t, s);
+        expression(type_exp, name_exp);
+        if(type_exp == t_char)
+            emit("PRINTFC", name_exp);
+        else
+            emit("PRINTFN", name_exp);
     }
     nextSym();
     nextSym();
@@ -303,33 +378,115 @@ void printfStatement(TAB_ELEMENT *tab) {
 
 void assignStatement(TAB_ELEMENT *tab) {
     where(true, "assignStatement");
-    while(sym != becomes) nextSym();
+
+    std::string ident_name(token);
+    TAB_ELEMENT ele_left;
+    if(!lookup(token, true, &ele_left) && !lookup(token, false, &ele_left))
+        error(20);
+
     nextSym();
-    SYMBOL_TYPE exptype;
-    std::string s;
-    expression(exptype, s);
+    if(sym == lmedium) {
+        if(ele_left.length == 0)
+            error(29);
+        nextSym();
+        std::string name_index;
+        SYMBOL_TYPE type_index;
+        expression(type_index, name_index);
+        ident_name = ident_name + "[" + name_index + "]";
+        if(sym != rmedium)
+            error(16);
+        else nextSym();
+    } else {
+        if(ele_left.length) {
+            error(28);
+        }
+    }
+    if(sym != becomes) error(10);
     nextSym();
+    std::string name_right;
+    SYMBOL_TYPE type_right;
+    expression(type_right, name_right);
+
+    if(ele_left.type == t_char && type_right == t_int)
+        std::cout << "warning: converting int into char may lose informations" << std::endl;
+
+    emit(ident_name, "=", name_right);
+    if(sym != semicolon)
+        error(15);
+    else
+        nextSym();
+
     where(false, "assignStatement");
 }
 
 void callStatement(TAB_ELEMENT *tab) {
     where(true, "callStatement");
-    while(sym != semicolon) nextSym();
+    std::string funcname(token);
+    TAB_ELEMENT funcele;
+    lookup(token, false, &funcele);
+    emit("MKS");
     nextSym();
+
+    if(funcele.length == 0) {
+        if(sym != semicolon)
+            error(15);
+        else
+            nextSym();
+    } else {
+        int para_count = 0;
+        do {
+            nextSym();
+            std::string name_para;
+            SYMBOL_TYPE type_para;
+            expression(type_para, name_para);
+
+            if(type_para != local_tab[funcele.value][para_count].type)
+                error(26);
+
+            emit("PUSH", name_para);
+            ++para_count;
+        } while(sym == comma);
+        if(para_count != funcele.length)
+            error(26);
+        if(sym != rsmall)
+            error(17);
+        else
+            nextSym();
+        if(sym != semicolon)
+            error(15);
+        else
+            nextSym();
+    }
+    emit("CAL", funcname);
+
     where(false, "callStatement");
 }
 
 void returnStatement(TAB_ELEMENT *tab) {
     where(true, "returnStatement");
-    SYMBOL_TYPE t;
-    std::string s;
+    returnExist = true;
+    SYMBOL_TYPE type;
+    std::string name;
     nextSym(); // returnsy
-    if(sym != semicolon) {
+    if(sym == lsmall) {
         nextSym(); // left parent
-        expression(t, s);
-        nextSym(); // right parent
+        expression(type, name);
+        emit("RETV", name);
+        if(type != tab->type) {
+            error(30);
+        }
+        if(sym != rsmall)
+            error(17);
+        else
+            nextSym(); // right parent
+    } else {
+        if(tab->type != t_void)
+            error(30);
     }
-    nextSym(); // semi
+    if(sym == semicolon)
+        nextSym(); // semi
+    else error(15);
+    emit("RETURN");
     where(false, "returnStatement");
 }
 
@@ -337,54 +494,132 @@ void returnStatement(TAB_ELEMENT *tab) {
 
 void expression(SYMBOL_TYPE &type, std::string &res) {
     where(true, "expression");
-    if(sym == pluscon || sym == minuscon) nextSym();
-    SYMBOL_TYPE t;
-    std::string s;
-    term(t, s);
-    while(sym == pluscon || sym == minuscon) {
+    std::string name = newTmpVar();
+    // SYMBOL_TYPE type;
+    int signal = 1;
+    if(sym == pluscon || sym == minuscon) {
+        if(sym == minuscon) signal = -1;
         nextSym();
-        term(t, s);
     }
+    SYMBOL_TYPE term_type;
+    std::string term_name;
+    term(term_type, term_name);
+    type = term_type;
+    if(signal == -1) {
+        type = t_int;
+        emit(name, "-1", "*", term_name);
+    } else {
+        emit(name, "=", term_name);
+    }
+
+    while(sym == pluscon || sym == minuscon) {
+        SYMBOL op = sym;
+        nextSym();
+        term(term_type, term_name);
+        if(op == pluscon)
+            emit(name, name, "+", term_name);
+        else
+            emit(name, name, "-", term_name);
+        type = t_int;
+    }
+
+    res = name;
+
     where(false, "expression");
 }
 
 void term(SYMBOL_TYPE &type, std::string &res) {
     where(true, "term");
-    SYMBOL_TYPE t;
-    std::string s;
-    factor(t, s);
+    std::string name = newTmpVar();
+    std::string fac_name;
+    factor(type, fac_name);
+    emit(name, "=", fac_name);
     while(sym == timescon || sym == divcon) {
+        SYMBOL op = sym;
         nextSym();
-        factor(t, s);
+        SYMBOL_TYPE fac_type;
+        factor(fac_type, fac_name);
+        if(op == timescon)
+            emit(name, name, "*", fac_name);
+        else
+            emit(name, name, "/", fac_name);
+        type = t_int;
     }
+    res = name;
     where(false, "term");
 }
 
 void factor(SYMBOL_TYPE &type, std::string &res) {
     where(true, "factor");
-    SYMBOL_TYPE t;
-    std::string s;
     switch (sym) {
     case ident:
         TAB_ELEMENT lkup;
         if(lookup(token, true, &lkup) || lookup(token, false, &lkup)) {
             if(lkup.kind == func) {
+                if(lkup.type == t_void)
+                    error(33);
+                else
+                    type = lkup.type;
+                nextSym();
+                emit("MKS");
                 if(lkup.length) {
-                    nextSym();
+                    if(sym != lsmall)
+                        error(22);
+                    int para_count = 0;
                     do {
                         nextSym();
-                        expression(t, s);
+                        std::string para_name;
+                        SYMBOL_TYPE para_type;
+                        expression(para_type, para_name);
+
+                        if(local_tab[lkup.value][para_count].type != para_type)
+                            error(26);
+
+                        emit("PUSH", para_name);
+                        ++para_count;
+
                     } while(sym == comma);
+                    if(para_count != lkup.length)
+                        error(26);
+                    if(sym != rsmall)
+                        error(17);
+                    else
+                        nextSym();
                 }
-                nextSym();
+                emit("CAL", std::string(lkup.ident));
+                res = newTmpVar();
+                emit(res, "=", "RET");
+
             } else if(lkup.kind == var || lkup.kind == para) {
-                if(lkup.length) {
-                    nextSym();
-                    nextSym();
-                    expression(t, s);
-                }
                 nextSym();
-            } else if(lkup.kind == cons) nextSym();
+
+                if(lkup.length) {
+                    if(sym != lmedium)
+                        error(32);
+                    else
+                        nextSym();
+                    std::string index_name;
+                    SYMBOL_TYPE index_type;
+                    expression(index_type, index_name);
+                    if(index_type != t_int)
+                        error(31);
+                    res = std::string(lkup.ident) + "[" + index_name + "]";
+                    type = lkup.type;
+
+                    if(sym != rmedium)
+                        error(16);
+                    else nextSym();
+                } else {
+                    type = lkup.type;
+                    res = std::string(lkup.ident);
+                }
+
+
+            } else if(lkup.kind == cons) {
+                type = lkup.type;
+                res = std::string(lkup.ident);
+                nextSym();
+            }
         } else {
             error(20);
             nextSym();
@@ -400,18 +635,29 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
     case pluscon:
     case minuscon:
         nextSym();
+        if(sym != intcon || num == 0)
+            error(11);
+        type = t_int;
+        res = int2str(num);
         nextSym();
         break;
     case intcon:
+        type = t_int;
+        res = int2str(num);
         nextSym();
         break;
     case charcon:
+        type = t_char;
+        res = int2str(num);
         nextSym();
         break;
     case lsmall:
         nextSym();
-        expression(t, s);
-        nextSym();
+        expression(type, res);
+        if(sym == rsmall)
+            nextSym();
+        else
+            error(17);
     }
     where(false, "factor");
 }

@@ -37,17 +37,25 @@ static char *errormessages[] = {
     "should be `]`", // 16
     "should be `)`", // 17
     "should be `{`", // 18
-    "const type can't be left value", // 19
+    "can't be left value", // 19
     "identity not defined", // 20
     "should be `}`", // 21
     "should be `(`", // 22
     "missing `else`", // 23
     "missing `case`", // 24
     "should be `:`", // 25
+    "parameter not matched", // 26
+    "return statement not exist", // 27
+    "should't be array", // 28
+    "should be array", // 29
+    "return type not matched", // 30
+    "should be int", // 31
+    "should be `[`", // 32
+    "can't call void function in expression", // 33
 
 
-    "reach end of file", // 26
-    "file not exist" // 27
+    "reach end of file", // 34
+    "file not exist" // 35
 };
 
 extern std::vector<ERROR> errorlist;

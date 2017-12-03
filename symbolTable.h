@@ -10,7 +10,7 @@ typedef enum {
 } SYMBOL_KIND;
 
 typedef enum {
-    t_void, t_char, t_int
+    t_void, t_char, t_int, t_tmp
 } SYMBOL_TYPE;
 
 struct TAB_ELEMENT {
@@ -27,7 +27,7 @@ extern vector<TAB_ELEMENT> global_tab;
 extern vector<vector<TAB_ELEMENT> > local_tab;
 
 
-extern TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);
+extern TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);
 
 extern int lookup(char *ident, int local_flag, TAB_ELEMENT *element);
 

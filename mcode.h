@@ -1,5 +1,6 @@
 #pragma once
 
+#include "symbolTable.h"
 #include <string>
 #include <map>
 #include <vector>

@@ -21,7 +21,8 @@ ostream &operator << (ostream &out, TAB_ELEMENT ele) {
                     ele.kind == func ? "func" :
                     ele.kind == cons ? "cons" : "para";
     const char *t = ele.type == t_int ? " int" :
-                    ele.type == t_char ? "char" : "void";
+                    ele.type == t_char ? "char" :
+                    ele.type == t_void ? "void" : "temp";
     char s[60];
     sprintf(s, "|%10s|\t%s|\t%s|\t%3d|\t%3d|", ele.ident, k, t, ele.length, ele.value);
     out << s;
@@ -29,7 +30,7 @@ ostream &operator << (ostream &out, TAB_ELEMENT ele) {
 }
 
 
-TAB_ELEMENT* enter(char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev) {
+TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev) {
     TAB_ELEMENT t;
     strcpy(t.ident, ident);
     t.kind = kind;

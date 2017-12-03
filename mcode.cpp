@@ -39,7 +39,9 @@ std::string newTmpVar() {
     char s[4];
     sprintf(s, "%d", tmpVar_no);
     ++tmpVar_no;
-    return "#t" + std::string(s);
+    std::string varname = "#t" + std::string(s);
+    enter(varname.c_str(), var, t_tmp, 0, 0, 1);
+    return varname;
 }
 
 void emit(std::string z, std::string x, std::string op, std::string y) {

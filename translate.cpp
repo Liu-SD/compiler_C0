@@ -94,7 +94,7 @@ void setBlock(std::string ident) {
 
 bool num(std::string s) {
     int i = 0;
-    if(s[0] == '-'){
+    if(s[0] == '-') {
         ++i;
     }
     for(; i < s.size(); ++i) {
@@ -144,20 +144,14 @@ void loadVal(std::string reg, std::string ident) {
         int offset;
         bool constkind;
         if(getLocalOffset(arr, offset, constkind)) {
-            if(constkind)
-                write("li $t0 " + int2str(offset));
-            else
-                write("la $t0 " + int2str(offset * WORD_WIDTH_) + "($fp)");
+            write("la $t0 " + int2str(offset * WORD_WIDTH_) + "($fp)");
         } else {
             getGlobalOffset(arr, offset, constkind);
-            if(constkind)
-                write("li $t0 " + int2str(offset));
-            else
-                write("la $t0 " + int2str(offset * WORD_WIDTH_) + "($gp)");
+            write("la $t0 " + int2str(offset * WORD_WIDTH_) + "($gp)");
         }
         write("mul " + reg + " " + reg + " 4");
         write("add " + reg + " " + reg + " $t0");
-        write("la " + reg + " (" + reg + ")");
+        write("lw " + reg + " (" + reg + ")");
     }
 
 
@@ -205,8 +199,7 @@ void storeVal(std::string reg, std::string ident) {
         write("mul $t0 $t0 4");
         write("add $t0 $t0 $t1");
         write("sw " + reg + " ($t0)");
-    }
-    else if(getLocalOffset(ident, offset, constkind))
+    } else if(getLocalOffset(ident, offset, constkind))
         write("sw " + reg + " " + int2str(offset * WORD_WIDTH_) + "($fp)");
     else {
         getGlobalOffset(ident, offset, constkind);
@@ -381,7 +374,7 @@ void translate() {
             if(t == "C")
                 write("li $v0 11");
 
-             else
+            else
                 write("li $v0 1");
 
 

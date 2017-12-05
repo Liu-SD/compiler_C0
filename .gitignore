@@ -4,3 +4,5 @@
 *.layout
 *.depend
 *.txt
+*.c0
+*.asm

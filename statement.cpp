@@ -438,6 +438,7 @@ void callStatement(TAB_ELEMENT *tab) {
             nextSym();
     } else {
         int para_count = 0;
+        std::vector<std::string> para_names;
         do {
             nextSym();
             std::string name_para;
@@ -447,11 +448,16 @@ void callStatement(TAB_ELEMENT *tab) {
             if(type_para != local_tab[funcele.value][para_count].type)
                 error(26);
 
-            emit("PUSH", name_para, int2str(para_count));
+            // emit("PUSH", name_para, int2str(para_count));
+            para_names.push_back(name_para);
             ++para_count;
         } while(sym == comma);
         if(para_count != funcele.length)
             error(26);
+
+        for(int i = 0; i < para_names.size(); i++)
+            emit("PUSH", para_names[i], int2str(i));
+
         if(sym != rsmall)
             error(17);
         else
@@ -569,6 +575,7 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                     if(sym != lsmall)
                         error(22);
                     int para_count = 0;
+                    std::vector<std::string> para_names;
                     do {
                         nextSym();
                         std::string para_name;
@@ -578,12 +585,15 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                         if(local_tab[lkup.value][para_count].type != para_type)
                             error(26);
 
-                        emit("PUSH", para_name, int2str(para_count));
+                        //emit("PUSH", para_name, int2str(para_count));
+                        para_names.push_back(para_name);
                         ++para_count;
 
                     } while(sym == comma);
                     if(para_count != lkup.length)
                         error(26);
+                    for(int i = 0; i < para_names.size(); i++)
+                        emit("PUSH", para_names[i], int2str(i));
                     if(sym != rsmall)
                         error(17);
                     else

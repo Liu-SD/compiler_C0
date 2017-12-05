@@ -120,6 +120,8 @@ int main() {
     showerrormessages();
     //showMcode();
     translate();
+
+
     std::ofstream fout("mcode.c0");
     EMBEDTAB code = embeddingLabel();
     // std::cout << std::endl;

@@ -47,6 +47,8 @@
 		<Unit filename="statement.h" />
 		<Unit filename="symbolTable.cpp" />
 		<Unit filename="symbolTable.h" />
+		<Unit filename="translate.cpp" />
+		<Unit filename="translate.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

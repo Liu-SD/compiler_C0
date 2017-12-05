@@ -21,3 +21,7 @@ extern void emit(std::string x, std::string y); // push y    call y
 extern void emit(std::string x); // mark stack
 
 extern void showMcode();
+
+typedef std::vector<std::pair<std::string, std::string> > EMBEDTAB;
+
+extern EMBEDTAB embeddingLabel();

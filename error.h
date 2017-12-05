@@ -52,6 +52,7 @@ static char *errormessages[] = {
     "should be int", // 31
     "should be `[`", // 32
     "can't call void function in expression", // 33
+    "switch type not matched", // 34
 
 
     "reach end of file", // 34

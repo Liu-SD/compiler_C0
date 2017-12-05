@@ -21,7 +21,7 @@ std::string newLabel() {
     char s[4];
     sprintf(s, "%d", label_no);
     ++label_no;
-    std::string label = "#Label_" + std::string(s);
+    std::string label = "#Label_" + std::string(s) + "_";
     label_tab[label] = -1;
     return label;
 }
@@ -36,7 +36,7 @@ int setLabelVal(std::string label, int val) {
 
 std::string newTmpVar() {
     static int tmpVar_no = 0;
-    char s[4];
+    char s[7];
     sprintf(s, "%d", tmpVar_no);
     ++tmpVar_no;
     std::string varname = "#t" + std::string(s);
@@ -69,4 +69,29 @@ void showMcode() {
     for(std::map<std::string, int>::iterator iter = label_tab.begin(); iter != label_tab.end(); iter++) {
         std::cout << iter->first << "\t" << iter->second << std::endl;
     }
+}
+
+
+EMBEDTAB embeddingLabel() {
+    EMBEDTAB embed;
+    for (std::vector<std::string>::iterator iter = code_tab.begin(); iter != code_tab.end(); ++iter) {
+        std::pair<std::string, std::string> p (std::string(), *iter);
+        embed.push_back(p);
+    }
+    // embed.push_back(std::pair<std::string, std::string> (std::string(), "BREAK"));
+    for (std::map<std::string, int>::iterator iter= label_tab.begin(); iter != label_tab.end(); ++iter) {
+        if(embed[iter->second].first.empty()) {
+            embed[iter->second].first = iter->first;
+        } else {
+            std::string origin = embed[iter->second].first;
+            std::string replaced = iter->first;
+            for (EMBEDTAB::iterator iter = embed.begin(); iter != embed.end(); ++iter) {
+                int pos = iter->second.find(replaced);
+                if(pos != std::string::npos) {
+                    iter->second = iter->second.replace(pos, replaced.size(), origin);
+                }
+            }
+        }
+    }
+    return embed;
 }

@@ -1,7 +1,7 @@
 #include "declaration.h"
 #include <string.h>
 #include <iostream>
-using namespace std;
+// using namespace std;
 
 
 void constDeclare(int lev, TAB_ELEMENT* tab) {
@@ -111,7 +111,6 @@ TAB_ELEMENT* global_varOrFunc() {
     if(sym == comma || sym == semicolon)
         return enter(token, var, type, length, 0, 0);
     else if (sym == lsmall || sym == lbig) {
-        emit("");
         emit(type == t_int ? "int": "char", std::string(token) + "()");
         return enter(token, func, type, 0, 0, 0);
     } else return NULL;
@@ -207,7 +206,7 @@ void global_funcDeclare(TAB_ELEMENT *tab) {
                     error(12);
                 }
                 enter(token, para, t, 0, 0, 1);
-                emit("para", t == t_int ? "int": "char", std::string(token));
+                // emit("para", t == t_int ? "int": "char", std::string(token));
                 ++paracount;
                 nextSym();
             } while(sym == comma);

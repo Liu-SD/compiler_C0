@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
+// using namespace std;
 
 typedef enum {
     var, para, func, cons
@@ -20,11 +20,11 @@ struct TAB_ELEMENT {
     int length; // 0 if not array
     int value;
 
-    friend ostream &operator << (ostream &out, TAB_ELEMENT ele);
+    friend std::ostream &operator << (std::ostream &out, TAB_ELEMENT ele);
 };
 
-extern vector<TAB_ELEMENT> global_tab;
-extern vector<vector<TAB_ELEMENT> > local_tab;
+extern std::vector<TAB_ELEMENT> global_tab;
+extern std::vector<std::vector<TAB_ELEMENT> > local_tab;
 
 
 extern TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);

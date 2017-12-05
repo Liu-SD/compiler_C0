@@ -1,7 +1,7 @@
 #include "grammaticalAnalysis.h"
 #include <iostream>
 
-using namespace std;
+// using namespace std;
 
 /*
 global_tabelement指针指向状态B或状态F中读到并放到全局符号表中的元素。
@@ -21,7 +21,6 @@ void stat_B() {
 void stat_C() {
     nextSym();
     global_tabelement = enter(token, func, t_void, 0, 0, 0);
-    emit("");
     emit("void", std::string(token) + "()");
 }
 

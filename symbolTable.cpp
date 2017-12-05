@@ -5,18 +5,18 @@
 #include <string.h>
 #include <stdio.h>
 
-using namespace std;
+// using namespace std;
 
-vector<TAB_ELEMENT> global_tab;
-vector<vector<TAB_ELEMENT> > local_tab;
+std::vector<TAB_ELEMENT> global_tab;
+std::vector<std::vector<TAB_ELEMENT> > local_tab;
 int display = -1;
 int offset = 0;
 
 const int FUNC_OFFSET = 3;// area for return value, return address, previous $fp
 
-vector<string> mcode;
+std::vector<std::string> mcode;
 
-ostream &operator << (ostream &out, TAB_ELEMENT ele) {
+std::ostream &operator << (std::ostream &out, TAB_ELEMENT ele) {
     const char *k = ele.kind == var ? " var" :
                     ele.kind == func ? "func" :
                     ele.kind == cons ? "cons" : "para";
@@ -41,7 +41,7 @@ TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int le
     // if function, new display area
     if(kind == func) {
         t.value = ++display;
-        local_tab.push_back(vector<TAB_ELEMENT>());
+        local_tab.push_back(std::vector<TAB_ELEMENT>());
         offset = FUNC_OFFSET;
     }
 
@@ -63,7 +63,7 @@ TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int le
 }
 
 int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
-    vector<TAB_ELEMENT>::iterator head, tail;
+    std::vector<TAB_ELEMENT>::iterator head, tail;
     if(local_flag) {
         head = local_tab[display].begin();
         tail = local_tab[display].end();
@@ -71,7 +71,7 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
         head = global_tab.begin();
         tail = global_tab.end();
     }
-    for(vector<TAB_ELEMENT>::iterator iter = head; iter != tail; iter++) {
+    for(std::vector<TAB_ELEMENT>::iterator iter = head; iter != tail; iter++) {
         if(!strcmp(iter->ident, ident)) {
             if(element) {
                 element->kind = iter->kind;
@@ -89,21 +89,21 @@ int lookup(char *ident, int local_flag, TAB_ELEMENT *element) {
 void show_tables() {
     char tab_head[60];
     sprintf(tab_head, "|%10s|\t%4s|\t%4s|\t%3s|\t%3s|", "ident", "kind", "type", "len", "val");
-    cout << endl << "global_table: " << endl;
-    cout << " ------------------------------------------ " << endl;
-    cout << tab_head << endl;
-    cout << " ------------------------------------------ " << endl;
+    std::cout << std::endl << "global_table: " << std::endl;
+    std::cout << " ------------------------------------------ " << std::endl;
+    std::cout << tab_head << std::endl;
+    std::cout << " ------------------------------------------ " << std::endl;
     for(int i = 0; i < global_tab.size(); i++)
-        cout << global_tab[i] << endl;
-    cout << " ------------------------------------------ " << endl << endl << "local_table: " << endl;
-    cout << " ------------------------------------------ " << endl;
-    cout << tab_head << endl;
+        std::cout << global_tab[i] << std::endl;
+    std::cout << " ------------------------------------------ " << std::endl << std::endl << "local_table: " << std::endl;
+    std::cout << " ------------------------------------------ " << std::endl;
+    std::cout << tab_head << std::endl;
     for (int i = 0; i < local_tab.size(); i++) {
-        cout << " --------------------" << i << "--------------------- " << endl;
+        std::cout << " --------------------" << i << "--------------------- " << std::endl;
         for (int j = 0; j < local_tab[i].size(); j++)
-            cout << local_tab[i][j] << endl;
+            std::cout << local_tab[i][j] << std::endl;
     }
-    cout << " ------------------------------------------ " << endl;
+    std::cout << " ------------------------------------------ " << std::endl;
 }
 
 /*

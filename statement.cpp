@@ -5,7 +5,7 @@
 
 #define isCompareOp(x) ((sym) == lss || (sym) == leq || (sym) == eql || (sym) == neq|| (sym) == grq || (sym) == gtr)
 
-using namespace std;
+// using namespace std;
 
 bool returnExist;
 
@@ -16,7 +16,7 @@ bool statementBeginSym(SYMBOL sym) {
         ident, mainsy, returnsy,
         semicolon, scanfsy, printfsy, lbig
     };
-    static set<SYMBOL> begSet(l, l + 10);
+    static std::set<SYMBOL> begSet(l, l + 10);
     return begSet.find(sym) != begSet.end();
 }
 
@@ -33,6 +33,7 @@ void compoundStatement(TAB_ELEMENT *tab) {
     statementArray(tab);
     if(tab->type != t_void && !returnExist)
         error(27);
+    emit("RETURN");
     where(false, "compoundStatement");
 }
 
@@ -132,26 +133,26 @@ void ifStatement(TAB_ELEMENT *tab) {
         emit(t, name_left, "-", name_right);
         switch (op) {
         case lss:
-            emit("GTEZ", t, jump_to_else);
+            emit("GEZ", t, jump_to_else);
             break;
         case leq:
-            emit("GTZ", t, jump_to_else);
+            emit("GZ", t, jump_to_else);
             break;
         case eql:
-            emit("BNEZ", t, jump_to_else);
+            emit("NEZ", t, jump_to_else);
             break;
         case neq:
-            emit("BEZ", t, jump_to_else);
+            emit("EZ", t, jump_to_else);
             break;
         case grq:
-            emit("LTZ", t, jump_to_else);
+            emit("LZ", t, jump_to_else);
             break;
         case gtr:
-            emit("LTEZ", t, jump_to_else);
+            emit("LEZ", t, jump_to_else);
             break;
         }
     } else {
-        emit("BEZ", name_left, jump_to_else);
+        emit("EZ", name_left, jump_to_else);
     }
 
     // end compare expression
@@ -198,26 +199,26 @@ void whileStatement(TAB_ELEMENT *tab) {
         emit(t, name_left, "-", name_right);
         switch (op) {
         case lss:
-            emit("GTEZ", t, jump_to_end);
+            emit("GEZ", t, jump_to_end);
             break;
         case leq:
-            emit("GTZ", t, jump_to_end);
+            emit("GZ", t, jump_to_end);
             break;
         case eql:
-            emit("BNEZ", t, jump_to_end);
+            emit("NEZ", t, jump_to_end);
             break;
         case neq:
-            emit("BEZ", t, jump_to_end);
+            emit("EZ", t, jump_to_end);
             break;
         case grq:
-            emit("LTZ", t, jump_to_end);
+            emit("LZ", t, jump_to_end);
             break;
         case gtr:
-            emit("LTEZ", t, jump_to_end);
+            emit("LEZ", t, jump_to_end);
             break;
         }
     } else {
-        emit("BEZ", name_left, jump_to_end);
+        emit("EZ", name_left, jump_to_end);
     }
 
     // end compare expression
@@ -269,16 +270,18 @@ void switchStatement(TAB_ELEMENT *tab) {
                 error(11);
         }
         if(sym == intcon || sym == charcon) {
+            if(sym == intcon && type_switch == t_char || sym == charcon && type_switch == t_int)
+                error(34);
             if(signal == -1) {
+                // std::string t0 = newTmpVar();
+                // emit(t0, "=", int2str(-1 * num));
                 std::string t0 = newTmpVar();
-                emit(t0, int2str(-1), "*", name_switch);
-                std::string t1 = newTmpVar();
-                emit(t1, t0, "-", int2str(num));
-                emit("BNEZ", t1, jump_to_next_case);
+                emit(t0, int2str(-1 * num), "-", name_switch);
+                emit("NEZ", t0, jump_to_next_case);
             } else {
                 std::string t0 = newTmpVar();
-                emit(t0, name_switch, "-", int2str(num));
-                emit("BNEZ", t0, jump_to_next_case);
+                emit(t0, int2str(num), "-", name_switch);
+                emit("NEZ", t0, jump_to_next_case);
             }
             nextSym();
         } else {
@@ -331,8 +334,10 @@ void scanfStatement(TAB_ELEMENT *tab) {
             error(19);
         else if(ele.length)
             error(28);
+        else if(ele.type = t_int)
+            emit("SCANFN", token);
         else
-            emit("SCANF", token);
+            emit("SCANFC", token);
         nextSym();
     } while(sym == comma);
     if(sym != rsmall)
@@ -408,7 +413,7 @@ void assignStatement(TAB_ELEMENT *tab) {
     expression(type_right, name_right);
 
     if(ele_left.type == t_char && type_right == t_int)
-        std::cout << "warning: converting int into char may lose informations" << std::endl;
+        std::cout << lc << "\t" << cc << "\t" << "warning: converting int into char may loss informations" << std::endl;
 
     emit(ident_name, "=", name_right);
     if(sym != semicolon)
@@ -424,7 +429,6 @@ void callStatement(TAB_ELEMENT *tab) {
     std::string funcname(token);
     TAB_ELEMENT funcele;
     lookup(token, false, &funcele);
-    emit("MKS");
     nextSym();
 
     if(funcele.length == 0) {
@@ -443,7 +447,7 @@ void callStatement(TAB_ELEMENT *tab) {
             if(type_para != local_tab[funcele.value][para_count].type)
                 error(26);
 
-            emit("PUSH", name_para);
+            emit("PUSH", name_para, int2str(para_count));
             ++para_count;
         } while(sym == comma);
         if(para_count != funcele.length)
@@ -481,7 +485,7 @@ void returnStatement(TAB_ELEMENT *tab) {
             nextSym(); // right parent
     } else {
         if(tab->type != t_void)
-            error(30);
+            error(22);
     }
     if(sym == semicolon)
         nextSym(); // semi
@@ -561,7 +565,6 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                 else
                     type = lkup.type;
                 nextSym();
-                emit("MKS");
                 if(lkup.length) {
                     if(sym != lsmall)
                         error(22);
@@ -575,7 +578,7 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                         if(local_tab[lkup.value][para_count].type != para_type)
                             error(26);
 
-                        emit("PUSH", para_name);
+                        emit("PUSH", para_name, int2str(para_count));
                         ++para_count;
 
                     } while(sym == comma);
@@ -638,7 +641,7 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
         if(sym != intcon || num == 0)
             error(11);
         type = t_int;
-        res = int2str(num);
+        res = int2str(sym == pluscon ? num : -num);
         nextSym();
         break;
     case intcon:

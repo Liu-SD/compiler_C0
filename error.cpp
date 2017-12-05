@@ -43,14 +43,13 @@ void error(int i) {
 void where(bool inout, char *s) {
     return;
     static int layer = 0;
-    using namespace std;
     if(inout) {
-        for (int i = 0; i < layer; i++)cout << "  ";
-        cout << "Enter <" << s << ">" << endl;
+        for (int i = 0; i < layer; i++)std::cout << "  ";
+        std::cout << "Enter <" << s << ">" << std::endl;
         layer++;
     } else {
         layer--;
-        for (int i = 0; i <layer; i++) cout << "  ";
-        cout << "Leave <" << s << ">" << endl;
+        for (int i = 0; i <layer; i++) std::cout << "  ";
+        std::cout << "Leave <" << s << ">" << std::endl;
     }
 }

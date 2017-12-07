@@ -4,7 +4,9 @@
 #include "error.h"
 #include "lexicalAnalysis.h"
 #include "mcode.h"
-#include <string>
+
+
+
 
 extern void constDeclare(int lev, TAB_ELEMENT *tab);
 extern void local_varDeclare(TAB_ELEMENT *tab);

@@ -1,7 +1,5 @@
 #include "mcode.h"
 
-#include "stdio.h"
-#include <iostream>
 
 std::map<std::string, int> label_tab;
 std::vector<std::string> code_tab;
@@ -94,4 +92,15 @@ EMBEDTAB embeddingLabel() {
         }
     }
     return embed;
+}
+
+void printMcode() {
+    std::ofstream fout("mcode.c0");
+    EMBEDTAB code = embeddingLabel();
+    // std::cout << std::endl;
+    for(int i = 0; i < code.size(); i++) {
+        char s[100];
+        sprintf(s, "%10s    %s\n", code[i].first.c_str(), code[i].second.c_str());
+        fout << s;
+    }
 }

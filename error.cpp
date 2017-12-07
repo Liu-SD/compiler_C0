@@ -1,15 +1,7 @@
 #include "error.h"
-#include <vector>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
 
-// using namespace std;
 
 std::vector<ERROR> errorlist;
-
-const bool debug = true;
 
 void showerrormessages() {
     if(!errorlist.size())
@@ -39,7 +31,6 @@ void error(int i) {
 }
 
 
-
 void where(bool inout, char *s) {
     return;
     static int layer = 0;
@@ -53,3 +44,4 @@ void where(bool inout, char *s) {
         std::cout << "Leave <" << s << ">" << std::endl;
     }
 }
+

@@ -1,11 +1,6 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdio.h>
 #include "grammaticalAnalysis.h"
 #include "translate.h"
 
-// using namespace std;
 
 void show_lexical() {
     int i = 1;
@@ -110,25 +105,29 @@ void show_lexical() {
     }
 }
 
+int main(int argc,char *argv[]) {
+    /*
+    if(argc < 2) {
+        std::cout << "input file path" << std::endl;
+        return -1;
+    }
+    set_file_stream(argv[1]);
+    */
 
-int main() {
-    set_file_stream("input(1).txt");
     //set_file_stream("tmp.txt");
+    set_file_stream("input(1).txt");
     nextSym();
     NFA_program();
-    show_tables();
+    //show_tables();
     showerrormessages();
-    //showMcode();
+    if(!errorlist.empty())
+        return 0;
+    printMcode();
+
+
     translate();
+    printTcode();
 
 
-    std::ofstream fout("mcode.c0");
-    EMBEDTAB code = embeddingLabel();
-    // std::cout << std::endl;
-    for(int i = 0; i < code.size(); i++) {
-        char s[100];
-        sprintf(s, "%10s\t%s\n", code[i].first.c_str(), code[i].second.c_str());
-        fout << s;
-    }
     //show_lexical();
 }

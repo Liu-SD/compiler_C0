@@ -1,7 +1,4 @@
 #include "grammaticalAnalysis.h"
-#include <iostream>
-
-// using namespace std;
 
 /*
 global_tabelement指针指向状态B或状态F中读到并放到全局符号表中的元素。
@@ -118,6 +115,7 @@ void NFA_program() {
             } else {
                 error(6);
                 // skip to [intsy, charsy, voidsy]
+                skip({intsy, charsy, voidsy});
             }
             break;
 
@@ -128,6 +126,7 @@ void NFA_program() {
             } else {
                 error(7);
                 // skip to [lsmall, lbig, intsy, charsy, statementbeg]
+                skip({lsmall, lbig});
             }
             break;
 
@@ -138,6 +137,7 @@ void NFA_program() {
             } else {
                 error(7);
                 // skip to [lsmall, lbig, intsy, charsy, statemetnbeg]
+                skip({lsmall, lbig});
             }
             break;
         }

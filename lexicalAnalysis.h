@@ -1,6 +1,10 @@
 #pragma once
 
+#include <set>
+#include <fstream>
+
 #include "error.h"
+
 
 typedef enum {ident = 0,
               intcon, intsy, charcon, charsy, stringcon, voidsy, constsy,
@@ -30,7 +34,7 @@ extern char ch;
 extern SYMBOL sym;
 extern char token[30];
 extern char stringbuff[500];
-extern char current_line[300];
+extern char current_line[500];
 const int keywordCount = 14;
 static char* keywords[] = {
     "if", "else", "while", "switch", "case", "default", "scanf", "printf",
@@ -44,3 +48,6 @@ static SYMBOL keySet[] = {
 extern void set_file_stream(char * filepath);
 // void nextCh();
 extern void nextSym();
+
+
+extern void skip(std::set<SYMBOL> symset);

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "symbolTable.h"
-#include <string>
 #include <map>
-#include <vector>
+#include <fstream>
+
+#include "symbolTable.h"
+
 
 extern std::string int2str(int i);
 
@@ -25,3 +26,5 @@ extern void showMcode();
 typedef std::vector<std::pair<std::string, std::string> > EMBEDTAB;
 
 extern EMBEDTAB embeddingLabel();
+
+extern void printMcode();

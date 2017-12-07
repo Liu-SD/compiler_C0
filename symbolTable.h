@@ -2,8 +2,9 @@
 
 #include <vector>
 #include <iostream>
-
-// using namespace std;
+#include <string>
+#include <cstring>
+#include <cstdio>
 
 typedef enum {
     var, para, func, cons

@@ -1,13 +1,5 @@
 #include "translate.h"
 
-#include <regex>
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <cstdio>
-
-int linecount = 0;
-
 #define OFFSET_RET_VALUE_ 0
 #define OFFSET_RET_ADDR_ 1
 #define OFFSET_PREV_FP_ 2
@@ -118,13 +110,7 @@ std::string writeString(std::string str) {
     return strLabel;
 }
 
-void showTcode () {
-    std::cout << ".data" << std::endl;
-    for (int i = 0; i < data_segment.size(); i++)
-        std::cout << data_segment[i] << std::endl;
-    std::cout << std::endl << ".text" << std::endl;
-    for (int i = 0; i < text_segment.size(); i++)
-        std::cout << text_segment[i] << std::endl;
+void printTcode () {
 
     std::ofstream fout("tcode.asm");
     fout << ".data" << std::endl;
@@ -133,6 +119,15 @@ void showTcode () {
     fout << std::endl << ".text" << std::endl;
     for (int i = 0; i < text_segment.size(); i++)
         fout << text_segment[i] << std::endl;
+
+    return;
+    std::cout << ".data" << std::endl;
+    for (int i = 0; i < data_segment.size(); i++)
+        std::cout << data_segment[i] << std::endl;
+    std::cout << std::endl << ".text" << std::endl;
+    for (int i = 0; i < text_segment.size(); i++)
+        std::cout << text_segment[i] << std::endl;
+
 }
 
 void loadVal(std::string reg, std::string ident) {
@@ -404,5 +399,4 @@ void translate() {
 
         else std::cout << iter->second << std::endl;
     }
-    showTcode();
 }

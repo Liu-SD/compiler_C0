@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <fstream>
-#include <iostream>
-#include <string.h>
 #include "lexicalAnalysis.h"
 
 #define isnum(x) ((x) >= '0' && (x) <= '9')
@@ -22,7 +18,7 @@ char ch;
 SYMBOL sym;
 char token[30];
 char stringbuff[500];
-char current_line[300];
+char current_line[500];
 
 void nextCh() {
     while(cc == ll) {
@@ -42,7 +38,7 @@ void nextCh() {
 void set_file_stream(char * filepath) {
     fin = new std::ifstream(filepath);
     if(!*fin) {
-        error(36);
+        error(37);
     }
     lc = 0;
     cc = 0;
@@ -51,7 +47,7 @@ void set_file_stream(char * filepath) {
 
 
 void nextSym() {
-    if(sym == eof) error(35);
+    if(sym == eof) error(36);
 
     while(isblank(ch)) nextCh();
 
@@ -190,5 +186,15 @@ void nextSym() {
 
     else {
         error(1);
+        nextCh();
     }
+}
+
+
+
+void skip(std::set<SYMBOL> symset) {
+    printf("skip from line %d pos %d ", lc, cc);
+    while(symset.find(sym) == symset.end())
+        nextSym();
+    printf("to line %d pos %d\n", lc, cc);
 }

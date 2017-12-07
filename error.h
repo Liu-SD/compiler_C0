@@ -1,21 +1,27 @@
 #pragma once
 
 #include <vector>
-// using namespace std;
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
 
 extern int lc;
 extern int cc;
-extern char current_line[300];
+extern char current_line[500];
+
+
+const bool debug = false;
+
 
 struct ERROR {
     int errcode;
     int errline;
     int errpos;
-    // char *errmsg;
     char linecontent[300];
 };
 
-const int SHUT_DOWN = 26;
+const int SHUT_DOWN = 36;
 
 static char *errormessages[] = {
     "illegal string format", // 0
@@ -53,6 +59,7 @@ static char *errormessages[] = {
     "should be `[`", // 32
     "can't call void function in expression", // 33
     "switch type not matched", // 34
+    "main is not callable", // 35
 
 
     "reach end of file", // 34

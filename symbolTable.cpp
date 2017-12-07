@@ -1,9 +1,5 @@
 #include "symbolTable.h"
-#include <vector>
-#include <string>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
+
 
 // using namespace std;
 
@@ -105,34 +101,3 @@ void show_tables() {
     }
     std::cout << " ------------------------------------------ " << std::endl;
 }
-
-/*
-about offset:
-        .
-        .
-        .
-|   return value  |
- -----------------
- -----------------
-|                 |
-|operate num stack|
- -----------------
-|                 |
-| local variables |
- -----------------
-|                 |
-|   parameters    |
- -----------------
-|    prev $fp     |
- -----------------
-| return address  |
- -----------------
-|  return value   |
- -----------------
- -----------------
-|                 |
-| global variable |
- -----------------
-*/
-
-

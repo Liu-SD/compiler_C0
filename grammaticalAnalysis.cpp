@@ -63,6 +63,7 @@ void NFA_program() {
             } else {
                 error(3);
                 // skip to [constsy, voidsy, intsy, charsy]
+                skip({constsy, voidsy, intsy, charsy});
             }
             break;
 
@@ -76,6 +77,7 @@ void NFA_program() {
             } else {
                 error(4);
                 // skip to [comma, semicolon, lsmall, lbig]
+                skip({comma, semicolon, lsmall, lbig});
             }
             break;
 
@@ -89,6 +91,7 @@ void NFA_program() {
             } else {
                 error(5);
                 // skip to [ident]
+                skip({mainsy, ident});
             }
             break;
 
@@ -102,6 +105,7 @@ void NFA_program() {
             } else {
                 error(6);
                 // skip to [intsy, charsy, voidsy]
+                skip({intsy, charsy, voidsy});
             }
             break;
 

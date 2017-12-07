@@ -115,7 +115,8 @@ int main(int argc,char *argv[]) {
     */
 
     //set_file_stream("tmp.txt");
-    set_file_stream("input(1).txt");
+    //set_file_stream("input(1).txt");
+    set_file_stream("main.cpp");
     nextSym();
     NFA_program();
     //show_tables();

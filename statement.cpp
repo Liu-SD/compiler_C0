@@ -721,7 +721,9 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                     expression(index_type, index_name);
                     if(index_type != t_int)
                         error(31);
-                    res = std::string(lkup.ident) + "[" + index_name + "]";
+                    std::string arrTmp = newTmpVar();
+                    emit(arrTmp, "=", std::string(lkup.ident) + "[" + index_name + "]");
+                    res = arrTmp;
                     type = lkup.type;
 
                     if(sym != rmedium) {

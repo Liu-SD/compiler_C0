@@ -110,9 +110,9 @@ std::string writeString(std::string str) {
     return strLabel;
 }
 
-void printTcode () {
+void printTcode (std::string path) {
 
-    std::ofstream fout("tcode.asm");
+    std::ofstream fout(path);
     fout << ".data" << std::endl;
     for (int i = 0; i < data_segment.size(); i++)
         fout << data_segment[i] << std::endl;
@@ -120,14 +120,8 @@ void printTcode () {
     for (int i = 0; i < text_segment.size(); i++)
         fout << text_segment[i] << std::endl;
 
-    return;
-    std::cout << ".data" << std::endl;
-    for (int i = 0; i < data_segment.size(); i++)
-        std::cout << data_segment[i] << std::endl;
-    std::cout << std::endl << ".text" << std::endl;
-    for (int i = 0; i < text_segment.size(); i++)
-        std::cout << text_segment[i] << std::endl;
-
+    data_segment.clear();
+    text_segment.clear();
 }
 
 void loadVal(std::string reg, std::string ident) {
@@ -204,8 +198,7 @@ void storeVal(std::string reg, std::string ident) {
 
 
 
-void translate() {
-    embedcode = embeddingLabel();
+void translate(EMBEDTAB embedcode) {
 
     // set $fp to global var top
     bool flag = false;

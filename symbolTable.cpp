@@ -10,7 +10,7 @@ int offset = 0;
 
 const int FUNC_OFFSET = 3;// area for return value, return address, previous $fp
 
-std::vector<std::string> mcode;
+//std::vector<std::string> mcode;
 
 std::ostream &operator << (std::ostream &out, TAB_ELEMENT ele) {
     const char *k = ele.kind == var ? " var" :
@@ -100,4 +100,28 @@ void show_tables() {
             std::cout << local_tab[i][j] << std::endl;
     }
     std::cout << " ------------------------------------------ " << std::endl;
+}
+
+void update_symbol_table(std::set<std::string> reserved_var) {
+    for(int i = 0; i < local_tab.size(); i++) {
+        for(std::vector<TAB_ELEMENT>::iterator iter = local_tab[i].begin(); iter != local_tab[i].end(); iter++) {
+            if(reserved_var.find(std::string(iter->ident)) == reserved_var.end()) {
+                //iter->value = -iter->value;
+                iter = local_tab[i].erase(iter) - 1;
+            }
+        }
+        int offset = FUNC_OFFSET;
+        for(int j = 0; j < local_tab[i].size(); j++) {
+            if(local_tab[i][j].kind == var || local_tab[i][j].kind == para) {
+                local_tab[i][j].value = offset;
+                offset += local_tab[i][j].length == 0 ? 1 : local_tab[i][j].length;
+            }
+        }
+    }
+
+    for(std::set<std::string>::iterator iter = reserved_var.begin(); iter != reserved_var.end(); iter++) {
+        // std::cout << *iter << std::endl;
+        if((*iter)[0] == '#' && (*iter)[2] == '_')
+            enter(iter->c_str(), var, t_tmp, 0, 0, 0);
+    }
 }

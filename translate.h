@@ -7,5 +7,5 @@
 
 
 
-extern void translate();
-extern void printTcode();
+extern void translate(EMBEDTAB embedcode);
+extern void printTcode(std::string path);

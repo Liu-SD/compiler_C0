@@ -5,6 +5,7 @@
 #include <string>
 #include <cstring>
 #include <cstdio>
+#include <set>
 
 typedef enum {
     var, para, func, cons
@@ -33,3 +34,9 @@ extern TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type,
 extern int lookup(char *ident, int local_flag, TAB_ELEMENT *element);
 
 extern void show_tables();
+
+
+// delete var that not show in reserved_var;
+// add var to global_tab if it's in reserved_var but not in symbol_table
+// change offset
+extern void update_symbol_table(std::set<std::string> reserved_var);

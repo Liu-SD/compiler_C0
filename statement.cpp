@@ -374,7 +374,7 @@ void scanfStatement(TAB_ELEMENT *tab) {
         } else if(ele.length) {
             error(28);
             skip({comma, rsmall});
-        } else if(ele.type = t_int)
+        } else if(ele.type == t_int)
             emit("SCANFN", token);
         else
             emit("SCANFC", token);

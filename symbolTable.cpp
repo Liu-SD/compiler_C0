@@ -106,7 +106,6 @@ void update_symbol_table(std::set<std::string> reserved_var) {
     for(int i = 0; i < local_tab.size(); i++) {
         for(std::vector<TAB_ELEMENT>::iterator iter = local_tab[i].begin(); iter != local_tab[i].end(); iter++) {
             if(reserved_var.find(std::string(iter->ident)) == reserved_var.end()) {
-                //iter->value = -iter->value;
                 iter = local_tab[i].erase(iter) - 1;
             }
         }
@@ -120,8 +119,23 @@ void update_symbol_table(std::set<std::string> reserved_var) {
     }
 
     for(std::set<std::string>::iterator iter = reserved_var.begin(); iter != reserved_var.end(); iter++) {
-        // std::cout << *iter << std::endl;
-        if((*iter)[0] == '#' && (*iter)[2] == '_')
-            enter(iter->c_str(), var, t_tmp, 0, 0, 0);
+        int offset = 0;
+        for(std::vector<TAB_ELEMENT>::reverse_iterator riter = global_tab.rbegin(); riter != global_tab.rend(); riter++) {
+            if(riter->kind == var) {
+                int last_off = riter->value;
+                offset = riter->length ? last_off + riter->length : last_off + 1;
+                break;
+            }
+        }
+        if((*iter)[0] == '#' && (*iter)[2] == '_') {
+            TAB_ELEMENT gtmp;
+            strcpy(gtmp.ident, iter->c_str());
+
+            gtmp.kind = var;
+            gtmp.type = t_tmp;
+            gtmp.value = offset++;
+            gtmp.length = 0;
+            global_tab.push_back(gtmp);
+        }
     }
 }

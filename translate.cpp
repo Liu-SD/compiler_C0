@@ -13,20 +13,7 @@ EMBEDTAB embedcode;
 int block;
 int blockSize;
 
-std::regex rfunc("(void|int|char) (\\S+)\\(\\)");
-std::regex rreturn("RETURN");
-std::regex rassign2("(\\S+) = (\\S+)");
-std::regex rassign3("(\\S+) = (\\S+) (\\+|-|\\*|/) (\\S+)");
-std::regex rbranch("(GEZ|GZ|NEZ|EZ|LZ|LEZ) (\\S+) #(Label_\\d+_)");
-std::regex rretval("RETV (\\S+)");
-std::regex rjump("JMP #(Label_\\d+_)");
-std::regex rpush("PUSH (\\S+) (\\d+)");
-std::regex rcal("CAL (\\S+)");
-std::regex rprintv("PRINTF(N|C) (\\S+)");
-std::regex rprints("PRINTFS <(.*)>");
-std::regex rscan("SCANF(N|C) (\\S+)");
 
-std::regex rarr("(\\S+)\\[(\\S+)\\]");
 
 
 std::vector<std::string> text_segment;

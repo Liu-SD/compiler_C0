@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="coloring.cpp" />
+		<Unit filename="coloring.h" />
 		<Unit filename="dag_optimize.cpp" />
 		<Unit filename="dag_optimize.h" />
 		<Unit filename="declaration.cpp" />

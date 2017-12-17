@@ -10,21 +10,7 @@ map<dag_link, vector<string>> reverse_node_map;
 
 vector<pair<string, string>> optimize_codes;
 
-regex _rfunc("(void|int|char) (\\S+)\\(\\)");
-regex _rreturn("RETURN");
-regex _rassign2("(\\S+) = (\\S+)");
-regex _rassign2_with_left_arr("(\\S+?)\\[(\\S+?)\\] = (\\S+)");
-regex _rassign2_without_left_arr("([^\\s\\[\\]]+) = (\\S+)");
-regex _rassign3("(\\S+) = (\\S+) (\\+|-|\\*|/) (\\S+)");
-regex _rbranch("(GEZ|GZ|NEZ|EZ|LZ|LEZ) (\\S+) #(Label_\\d+_)");
-regex _rretval("RETV (\\S+)");
-regex _rjump("JMP #(Label_\\d+_)");
-regex _rpush("PUSH (\\S+) (\\d+)");
-regex _rcal("CAL (\\S+)");
-regex _rprintv("PRINTF(N|C) (\\S+)");
-regex _rprints("PRINTFS <(.*)>");
-regex _rscan("SCANF(N|C) (\\S+)");
-regex _rarr("(\\S+)\\[(\\S+)\\]");
+
 
 void enter_mcode() {
 	string s;
@@ -42,10 +28,10 @@ void enter_mcode() {
 		if(!label.empty())
             entrance.push_back(line_count);
 
-		if (regex_match(code, sm, _rassign2_without_left_arr)) {
+		if (regex_match(code, sm, rassign2_without_left_arr)) {
 			quad.value = string(sm[1]);
 			string s(sm[2]);
-			if (regex_match(s, sm, _rarr)) {
+			if (regex_match(s, sm, rarr)) {
 				quad.left = string(sm[1]);
 				quad.right = string(sm[2]);
 				quad.op = _arr_get;
@@ -55,7 +41,7 @@ void enter_mcode() {
 				quad.left = s;
 			}
 		}
-		else if (regex_match(code, sm, _rassign3)) {
+		else if (regex_match(code, sm, rassign3)) {
 			quad.value = string(sm[1]);
 			quad.left = string(sm[2]);
 			quad.right = string(sm[4]);
@@ -68,24 +54,24 @@ void enter_mcode() {
 		else {
 			entrance.push_back(line_count);
 			entrance.push_back(line_count + 1);
-			if (regex_match(code, sm, _rassign2_with_left_arr)) {
+			if (regex_match(code, sm, rassign2_with_left_arr)) {
 				quad.value = string(sm[1]);
 				quad.left = string(sm[2]);
 				quad.right = string(sm[3]);
 			}
-			else if (regex_match(code, sm, _rbranch)) {
+			else if (regex_match(code, sm, rbranch)) {
 				quad.value = string(sm[2]);
 			}
-			else if (regex_match(code, sm, _rretval)) {
+			else if (regex_match(code, sm, rretval)) {
 				quad.value = string(sm[1]);
 			}
-			else if (regex_match(code, sm, _rpush)) {
+			else if (regex_match(code, sm, rpush)) {
 				quad.value = string(sm[1]);
 			}
-			else if (regex_match(code, sm, _rprintv)) {
+			else if (regex_match(code, sm, rprintv)) {
 				quad.value = string(sm[2]);
 			}
-			else if (regex_match(code, sm, _rscan)) {
+			else if (regex_match(code, sm, rscan)) {
 				quad.value = string(sm[2]);
 			}
 		}

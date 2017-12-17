@@ -1,6 +1,7 @@
 #include "grammaticalAnalysis.h"
 #include "translate.h"
 #include "dag_optimize.h"
+#include "coloring.h"
 
 
 int main(int argc, char *argv[]) {
@@ -24,6 +25,7 @@ int main(int argc, char *argv[]) {
     if (!errorlist.empty())
         return 0;
     std::cout << "no error(s) in program\ngenerate mcode in ./mocde.c0\ngenerate tcode in ./tcode.asm" << std::endl;
+    std::cout << "generate dag optimized mcode in ./dag_optimized_mcode.c0\ngenerate dag optimized tcode.asm in ./ dag_optimized_tacode.asm" << std::endl;
     printMcode();
     translate(embeddingLabel());
     printTcode("tcode.asm");
@@ -37,4 +39,6 @@ int main(int argc, char *argv[]) {
 
     // mcode is in optimize_codes and symbol table updated now
     // do register optimize
+
+    // coloring_translate(optimize_codes);
 }

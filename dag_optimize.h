@@ -2,6 +2,7 @@
 
 #include "symbolTable.h"
 #include "mcode.h"
+#include "translate.h"
 
 #include <cassert>
 #include <regex>

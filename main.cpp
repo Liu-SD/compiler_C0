@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
 
     //set_file_stream("tmp.txt");
     //set_file_stream("input(1).txt");
-    //set_file_stream("15061111_test.txt");
-    set_file_stream("15061129_test.txt");
+    set_file_stream("15061111_test.txt");
+    //set_file_stream("15061129_test.txt");
 
     nextSym();
     NFA_program();

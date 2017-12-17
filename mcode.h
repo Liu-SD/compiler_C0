@@ -23,7 +23,7 @@ extern void emit(std::string x); // mark stack
 
 extern void showMcode();
 
-typedef std::vector<std::pair<std::string, std::string> > EMBEDTAB;
+typedef std::vector<std::pair<std::string, std::string>> EMBEDTAB;
 
 extern EMBEDTAB embeddingLabel();
 

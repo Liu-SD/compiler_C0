@@ -23,22 +23,22 @@ extern set<string> reserved_var;
 typedef enum { _null, _add, _sub, _mul, _div, _arr_get } optype;
 
 struct quadruple {
-	string label;
-	string code;
-	string value;
-	string left;
-	string right;
-	optype op;
+    string label;
+    string code;
+    string value;
+    string left;
+    string right;
+    optype op;
 };
 
 typedef struct dag_node {
-	bool inQ = false;
-	bool leaf;
-	string leaf_var_name;
-	optype op;
-	dag_node* left;
-	dag_node* right;
-	vector<dag_node*> parent;
+    bool inQ = false;
+    bool leaf;
+    string leaf_var_name;
+    optype op;
+    dag_node* left;
+    dag_node* right;
+    vector<dag_node*> parent;
 } *dag_link;
 
 

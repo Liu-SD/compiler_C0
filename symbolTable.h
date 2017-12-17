@@ -26,7 +26,7 @@ struct TAB_ELEMENT {
 };
 
 extern std::vector<TAB_ELEMENT> global_tab;
-extern std::vector<std::vector<TAB_ELEMENT> > local_tab;
+extern std::vector<std::vector<TAB_ELEMENT>> local_tab;
 
 
 extern TAB_ELEMENT* enter(const char *ident, SYMBOL_KIND kind, SYMBOL_TYPE type, int length, int value, int lev);

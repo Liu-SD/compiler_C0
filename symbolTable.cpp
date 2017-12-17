@@ -4,7 +4,7 @@
 // using namespace std;
 
 std::vector<TAB_ELEMENT> global_tab;
-std::vector<std::vector<TAB_ELEMENT> > local_tab;
+std::vector<std::vector<TAB_ELEMENT>> local_tab;
 int display = -1;
 int offset = 0;
 

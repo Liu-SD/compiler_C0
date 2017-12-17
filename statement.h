@@ -25,5 +25,6 @@ extern void callStatement(TAB_ELEMENT *tab);
 extern void returnStatement(TAB_ELEMENT *tab);
 
 extern void expression(SYMBOL_TYPE &type, std::string &res);
-extern void term(SYMBOL_TYPE &type, std::string &res);
-extern void factor(SYMBOL_TYPE &type, std::string &res);
+extern void expression(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value);
+extern void term(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value);
+extern void factor(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value);

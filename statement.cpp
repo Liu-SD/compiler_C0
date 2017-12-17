@@ -458,7 +458,13 @@ void assignStatement(TAB_ELEMENT *tab) {
         nextSym();
         std::string name_index;
         SYMBOL_TYPE type_index;
-        expression(type_index, name_index);
+
+        bool exp_bool_get = false;
+        int exp_value_get;
+        expression(type_index, name_index, exp_bool_get, exp_value_get);
+        if(exp_bool_get && (exp_value_get < 0 || exp_value_get >= ele_left.length))
+            error(36);
+
         ident_name = ident_name + "[" + name_index + "]";
         if(sym != rmedium) {
             error(16);
@@ -588,9 +594,13 @@ void returnStatement(TAB_ELEMENT *tab) {
     where(false, "returnStatement");
 }
 
-
-
 void expression(SYMBOL_TYPE &type, std::string &res) {
+    bool useless_bool;
+    int useless_int;
+    expression(type, res, useless_bool, useless_int);
+}
+
+void expression(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value) {
     where(true, "expression");
     std::string name = newTmpVar();
     // SYMBOL_TYPE type;
@@ -601,11 +611,12 @@ void expression(SYMBOL_TYPE &type, std::string &res) {
     }
     SYMBOL_TYPE term_type;
     std::string term_name;
-    term(term_type, term_name);
+    term(term_type, term_name, exp_bool, exp_value);
+    exp_value *= signal;
     type = term_type;
     if(signal == -1) {
         type = t_int;
-        emit(name, "-1", "*", term_name);
+        emit(name, "0", "-", term_name);
     } else {
         emit(name, "=", term_name);
     }
@@ -613,7 +624,8 @@ void expression(SYMBOL_TYPE &type, std::string &res) {
     while(sym == pluscon || sym == minuscon) {
         SYMBOL op = sym;
         nextSym();
-        term(term_type, term_name);
+        term(term_type, term_name, exp_bool, exp_value);
+        exp_bool = false;
         if(op == pluscon)
             emit(name, name, "+", term_name);
         else
@@ -626,17 +638,18 @@ void expression(SYMBOL_TYPE &type, std::string &res) {
     where(false, "expression");
 }
 
-void term(SYMBOL_TYPE &type, std::string &res) {
+void term(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value) {
     where(true, "term");
     std::string name = newTmpVar();
     std::string fac_name;
-    factor(type, fac_name);
+    factor(type, fac_name, exp_bool, exp_value);
     emit(name, "=", fac_name);
     while(sym == timescon || sym == divcon) {
         SYMBOL op = sym;
         nextSym();
         SYMBOL_TYPE fac_type;
-        factor(fac_type, fac_name);
+        factor(fac_type, fac_name, exp_bool, exp_value);
+        exp_bool = false;
         if(op == timescon)
             emit(name, name, "*", fac_name);
         else
@@ -647,7 +660,7 @@ void term(SYMBOL_TYPE &type, std::string &res) {
     where(false, "term");
 }
 
-void factor(SYMBOL_TYPE &type, std::string &res) {
+void factor(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value) {
     where(true, "factor");
     SYMBOL op;
     switch (sym) {
@@ -718,9 +731,15 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                         nextSym();
                     std::string index_name;
                     SYMBOL_TYPE index_type;
-                    expression(index_type, index_name);
+                    bool exp_bool_get = false;
+                    int exp_value_get;
+                    expression(index_type, index_name, exp_bool_get, exp_value_get);
                     if(index_type != t_int)
                         error(31);
+
+                    if(exp_bool_get && (exp_value_get < 0 || exp_value_get >= lkup.length))
+                        error(36);
+
                     std::string arrTmp = newTmpVar();
                     emit(arrTmp, "=", std::string(lkup.ident) + "[" + index_name + "]");
                     res = arrTmp;
@@ -738,6 +757,8 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
 
 
             } else if(lkup.kind == cons) {
+                exp_bool = true;
+                exp_value = lkup.value;
                 type = lkup.type;
                 res = std::string(lkup.ident);
                 nextSym();
@@ -767,16 +788,22 @@ void factor(SYMBOL_TYPE &type, std::string &res) {
                 return;
             }
         }
+        exp_bool = true;
+        exp_value = op == pluscon ? num : -num;
         type = t_int;
         res = int2str(op == pluscon ? num : -num);
         nextSym();
         break;
     case intcon:
+        exp_bool = true;
+        exp_value = num;
         type = t_int;
         res = int2str(num);
         nextSym();
         break;
     case charcon:
+        exp_bool = true;
+        exp_value = num;
         type = t_char;
         res = int2str(num);
         nextSym();

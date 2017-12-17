@@ -21,7 +21,7 @@ struct ERROR {
     char linecontent[300];
 };
 
-const int SHUT_DOWN = 36;
+const int SHUT_DOWN = 37;
 
 static char *errormessages[] = {
     "illegal string format", // 0
@@ -60,10 +60,11 @@ static char *errormessages[] = {
     "can't call void function in expression", // 33
     "switch type not matched", // 34
     "main is not callable", // 35
+    "index out of range", // 36
 
 
-    "reach end of file", // 34
-    "file not exist" // 35
+    "reach end of file", // 37
+    "file not exist" // 38
 };
 
 extern std::vector<ERROR> errorlist;

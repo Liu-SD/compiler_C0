@@ -13,8 +13,14 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
         }
     }
 
+    for(vector<pair<string, string>>::iterator iter = begin; iter != end; iter++)
+        cout << iter->first << '\t' << iter->second << endl;
+    cout << endl;
+
     // divide into blocks and link them
     vector<blk_link> blk_list;
+    blk_link blk = new blk_node;
+    blk_list.push_back(blk);
     for(vector<pair<string, string>>::iterator iter = begin; iter != end; iter++) {
 
     }

@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
     set_file_stream(argv[1]);
     */
 
-    //set_file_stream("tmp.txt");
+    set_file_stream("tmp.txt");
     //set_file_stream("input(1).txt");
     //set_file_stream("15061111_test.txt");
-    set_file_stream("15061129_test.txt");
+    //set_file_stream("15061129_test.txt");
 
     nextSym();
     NFA_program();
@@ -40,5 +40,5 @@ int main(int argc, char *argv[]) {
     // mcode is in optimize_codes and symbol table updated now
     // do register optimize
 
-    // coloring_translate(optimize_codes);
+    //coloring_translate(optimize_codes);
 }

@@ -10,6 +10,8 @@ using std::map;
 using std::vector;
 using std::regex;
 using std::smatch;
+using std::cout;
+using std::endl;
 
 typedef struct blk_node {
     set<string> use;

@@ -126,11 +126,11 @@ void enter_label(string label) {
 
 string calculate(dag_link link) {
     if (link->leaf)
-        return link->leaf_var_name;
+        return reverse_node_map[link][0];
     if (link->op == _null) {
         assert(link->left->leaf == true);
         assert(reverse_node_map[link->left].size() == 1);
-        return link->left->leaf_var_name;
+        return reverse_node_map[link->left][0];
     }
     for (int i = 0; i < reverse_node_map[link].size(); i++) {
         if (reserved_var.find(reverse_node_map[link][i]) != reserved_var.end())
@@ -282,6 +282,13 @@ void DAG(vector<quadruple>::iterator begin, vector<quadruple>::iterator end) {
             sprintf(n, "%d", tmp_var_index++);
             string s = "#t_" + string(n);
             reverse_node_map[node_list[i]].push_back(s);
+
+            if(node_list[i]->leaf) {
+                // if this node is leaf and origin leaf var move to other node,
+                // then set a temp var to be it's value before it leaves leaf node
+                enter_code(s, node_list[i]->leaf_var_name);
+                reserved_var.insert(s);
+            }
         }
     }
 
@@ -297,7 +304,7 @@ void DAG(vector<quadruple>::iterator begin, vector<quadruple>::iterator end) {
 
             assert(reverse_node_map[l].size() == 1);
             assert(l->leaf);
-            string l_str = l->leaf_var_name;
+            string l_str = calculate(l);
             for (int i = 0; i < reverse_node_map[v].size(); i++) {
                 if (reserved_var.find(reverse_node_map[v][i]) != reserved_var.end()) {
                     enter_code(reverse_node_map[v][i], l_str);

@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
     set_file_stream(argv[1]);
     */
 
-    set_file_stream("tmp.txt");
+    //set_file_stream("tmp.txt");
     //set_file_stream("input(1).txt");
     //set_file_stream("15061111_test.txt");
-    //set_file_stream("15061129_test.txt");
+    set_file_stream("15061129_test.txt");
 
     nextSym();
     NFA_program();
@@ -26,19 +26,19 @@ int main(int argc, char *argv[]) {
         return 0;
     std::cout << "no error(s) in program\ngenerate mcode in ./mocde.c0\ngenerate tcode in ./tcode.asm" << std::endl;
     std::cout << "generate dag optimized mcode in ./dag_optimized_mcode.c0\ngenerate dag optimized tcode.asm in ./ dag_optimized_tacode.asm" << std::endl;
-    printMcode();
+    printMcode("mcode.c0");
     translate(embeddingLabel());
     printTcode("tcode.asm");
 
     dag_optimize();
     update_symbol_table(reserved_var);
     //show_tables();
-    printMcode_optimized();
+    printMcode_optimized("mcode_dag_optimized.c0");
     translate(optimize_codes);
     printTcode("tcode_dag_optimized.asm");
 
     // mcode is in optimize_codes and symbol table updated now
     // do register optimize
 
-    //coloring_translate(optimize_codes);
+    coloring_translate(optimize_codes);
 }

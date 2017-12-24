@@ -20,9 +20,13 @@ typedef struct blk_node {
     set<string> out;
     vector<string> code;
     string label;
+    string jump_label;
+    string branch_label;
+    bool ret_blk = false;
 
-    vector<blk_node*> precursor;
-    vector<blk_node*> successor;
+    set<blk_node*> precursor;
+    set<blk_node*> successor;
+    bool inUpdate;
 } *blk_link;
 
 extern void coloring_translate(vector<pair<string, string>> mcode);

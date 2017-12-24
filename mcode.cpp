@@ -94,8 +94,8 @@ EMBEDTAB embeddingLabel() {
     return embed;
 }
 
-void printMcode() {
-    std::ofstream fout("mcode.c0");
+void printMcode(std::string path) {
+    std::ofstream fout(path);
     EMBEDTAB code = embeddingLabel();
     // std::cout << std::endl;
     for(int i = 0; i < code.size(); i++) {

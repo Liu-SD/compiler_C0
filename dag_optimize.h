@@ -45,4 +45,4 @@ typedef struct dag_node {
 
 extern void dag_optimize();
 
-extern void printMcode_optimized();
+extern void printMcode_optimized(string path);

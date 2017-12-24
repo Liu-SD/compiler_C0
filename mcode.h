@@ -27,4 +27,4 @@ typedef std::vector<std::pair<std::string, std::string>> EMBEDTAB;
 
 extern EMBEDTAB embeddingLabel();
 
-extern void printMcode();
+extern void printMcode(std::string path);

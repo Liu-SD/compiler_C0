@@ -12,8 +12,12 @@ int main(int argc, char *argv[]) {
     }
     set_file_stream(argv[1]);
     */
+    std::cout << "file path:" << std::endl;
+    char fpath[100];
+    std::cin >> fpath;
+    set_file_stream(fpath);
 
-    set_file_stream("tmp.txt");
+    //set_file_stream("tmp.txt");
     //set_file_stream("input(1).txt");
     //set_file_stream("15061111_test.txt");
     //set_file_stream("15061129_test.txt");

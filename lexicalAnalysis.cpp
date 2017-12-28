@@ -131,10 +131,15 @@ void nextSym() {
 
     else if(isnum(ch)) {
         num = 0;
+        bool startwith0 = ch == '0';
+        int cnt = 0;
         do {
             num = num * 10 + ch - '0';
+            cnt++;
             nextCh();
         } while(isnum(ch));
+        if(startwith0 && cnt > 1)
+            error(0);
         sym = intcon;
     }
 

@@ -410,16 +410,19 @@ void printfStatement(TAB_ELEMENT *tab) {
         skip({lsmall});
     }
     if(sym == stringcon) {
-        emit("PRINTFS", "<" + std::string(stringbuff) + ">");
+        std::string str(stringbuff);
+        // emit("PRINTFS", "<" + std::string(stringbuff) + ">");
         nextSym();
         if(sym == comma) {
             nextSym();
             expression(type_exp, name_exp);
+            emit("PRINTFS", "<" + str + ">");
             if(type_exp == t_char)
                 emit("PRINTFC", name_exp);
             else
                 emit("PRINTFN", name_exp);
-        }
+        } else
+            emit("PRINTFS", "<" + str + ">");
 
     } else {
         expression(type_exp, name_exp);

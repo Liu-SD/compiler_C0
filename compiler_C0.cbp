@@ -34,6 +34,7 @@
 		</Compiler>
 		<Unit filename="coloring.cpp" />
 		<Unit filename="coloring.h" />
+		<Unit filename="coloring_trans.cpp" />
 		<Unit filename="dag_optimize.cpp" />
 		<Unit filename="dag_optimize.h" />
 		<Unit filename="declaration.cpp" />

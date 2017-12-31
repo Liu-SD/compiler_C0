@@ -12,8 +12,8 @@ map<string, int> local_const_pool;
 map<string, int> var_reg;
 
 
-const int reg_start = 8;
-const int reg_end = 10;
+const int reg_start = 10;
+const int reg_end = 25;
 const int reg_count = reg_end - reg_start + 1;
 
 void enter_use(blk_link blk, string var) {
@@ -397,7 +397,8 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
             cout << ' ' << *i;
         cout << endl;
         cout  << "=========================" << endl;
-    }*/
+    }
+    */
 
     var_reg.clear();
     build_conflict_map();

@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     dag_optimize();
     update_symbol_table(reserved_var);
-    //show_tables();
+    // show_tables();
     printMcode_optimized("mcode_dag_optimized.c0");
     translate(optimize_codes);
     printTcode("tcode_dag_optimized.asm");

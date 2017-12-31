@@ -57,5 +57,6 @@ typedef struct blk_node {
 extern void coloring_translate(vector<pair<string, string>> mcode);
 
 extern vector<blk_link> blk_list;
+extern vector<TAB_ELEMENT> ltab;
 extern void to_tcode(string func_name);
 extern void printTcode_coloring(string path);

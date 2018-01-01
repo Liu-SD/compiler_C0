@@ -364,8 +364,6 @@ void to_tcode(string func_name) {
             }
         }
     }
-
-    printTcode_coloring("debug.txt");
 }
 
 
@@ -374,7 +372,7 @@ void printTcode_coloring(string path) {
     fout << ".data" << endl;
     for(int i = 0; i < tcode_data.size(); i++)
         fout << tcode_data[i] << endl;
-    fout << ".text" << endl;
+    fout << endl << ".text" << endl;
     for(int i = 0; i < tcode_text.size(); i++)
         fout << tcode_text[i] << endl;
 }

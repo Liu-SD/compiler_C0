@@ -53,6 +53,7 @@ void update_out(blk_link blk) {
     for(set<blk_link>::iterator i = blk->successor.begin(); i != blk->successor.end(); i++)
         for(set<string>::iterator j = (*i)->in.begin(); j != (*i)->in.end(); j++)
             blk->out.insert(*j);
+
 }
 
 bool update_in(blk_link blk) {
@@ -353,11 +354,14 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     link_blk_list();
 
     // delete unreachable node
-    /*
-    for(vector<blk_link>::iterator iter = blk_list.begin(); iter != blk_list.end(); iter++)
-        if((*iter)->precursor.empty()) {
-            delete *iter;
-            iter = blk_list.erase(iter);
+    /* still have bug
+    for(vector<blk_link>::iterator i = blk_list.begin(); i != blk_list.end(); i++)
+        if((*i)->precursor.empty()) {
+            for(set<blk_link>::iterator j = (*i)->precursor.begin(); j != (*i)->precursor.end(); j++)
+                (*j)->precursor.erase(*i);
+            blk_list.erase(i);
+            delete *i;
+            i = blk_list.begin() - 1;
         }
     */
 
@@ -366,7 +370,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
         bool updated = false;
         for(vector<blk_link>::reverse_iterator riter = blk_list.rbegin(); riter != blk_list.rend(); riter++) {
             update_out(*riter);
-            updated = update_in(*riter);
+            if(update_in(*riter))updated = true;
         }
         if(!updated)break;
     }
@@ -376,11 +380,11 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     int i = 0;
     for(vector<blk_link>::iterator iter = blk_list.begin(); iter != blk_list.end(); iter++) {
 
-        if(!(*iter)->label.empty())
-            cout << (*iter)->label << endl;
-        for(int i = 0; i < (*iter)->code.size(); i++) {
-            cout << (*iter)->code[i] << endl;
-        }
+        //if(!(*iter)->label.empty())
+        //    cout << (*iter)->label << endl;
+        //for(int i = 0; i < (*iter)->code.size(); i++) {
+        //    cout << (*iter)->code[i] << endl;
+        //}
 
         cout << "block " << i++ <<endl;
         cout << "use:" << endl;
@@ -414,7 +418,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
 
     to_tcode(func_name);
 
-    system("pause");
+    // system("pause");
 }
 
 void coloring_translate(vector<pair<string, string>> mcode) {

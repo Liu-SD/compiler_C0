@@ -49,4 +49,5 @@ int main(int argc, char *argv[]) {
     // do register optimize
 
     coloring_translate(optimize_codes);
+    printTcode_coloring("debug.asm");
 }

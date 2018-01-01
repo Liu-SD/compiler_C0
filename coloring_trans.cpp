@@ -135,10 +135,10 @@ void to_tcode(string func_name) {
     ett(func_name + ":");
     ett("sw $ra " + int2str(OFFSET_RET_ADDR_ * WORD_WIDTH_) + "($fp)");
 
+    reg_dis = blk_list[0]->register_distribute;
     for(set<string>::iterator iter = blk_list[0]->in.begin(); iter != blk_list[0]->in.end(); iter++)
         if(inRegister(*iter))
             ett("lw " + regName(*iter) + " " + varOff(*iter));
-
 
     for(int i = 0; i < blk_list.size(); i++) {
         //ett("#==========");
@@ -242,10 +242,10 @@ void to_tcode(string func_name) {
                     } else if(op == "-") {
                         if(inRegister(a)) {
                             ett("li " + regName(a) + " " + b);
-                            ett("subi " + regName(a) + " " + regName(a) + " " + reg_c);
+                            ett("sub " + regName(a) + " " + regName(a) + " " + reg_c);
                         } else {
                             ett("li $9 " + b);
-                            ett("subi $8 $9 " + reg_c);
+                            ett("sub $8 $9 " + reg_c);
                             ett("sw $8 " + varOff(a));
                         }
                     } else if(op == "*") {
@@ -325,7 +325,7 @@ void to_tcode(string func_name) {
                 string v(sm[1]);
                 int pos = str2int(string(sm[2]));
                 string reg_v = load(8, v);
-                ett("sw " + reg_v + int2str((blksz + REGISTER_SIZE_ + DISPLAY_SIZE_ + pos) * 4) + "($fp)");
+                ett("sw " + reg_v + " " + int2str((blksz + REGISTER_SIZE_ + DISPLAY_SIZE_ + pos) * 4) + "($fp)");
             } else if(regex_match(cd, sm, rcal)) {
                 string fn(sm[1]);
 
@@ -358,7 +358,7 @@ void to_tcode(string func_name) {
                 else ett("li $v0 12");
                 ett("syscall");
                 if(inRegister(v))
-                    ett("move $v0 " + regName(v));
+                    ett("move " + regName(v) + " $v0");
                 else
                     ett("sw $v0 " + varOff(v));
             }

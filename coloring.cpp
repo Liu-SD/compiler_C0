@@ -248,7 +248,7 @@ void build_conflict_map() {
         range[picked[i] - 1] = i;
 
     int *regs = new int[var_count];
-    memset(regs, 0, reg_count * sizeof(int));
+    memset(regs, 0, var_count * sizeof(int));
     for(int i = var_count - 1; i >= 0; i--) {
         int v = range[i];
         if(!record[v])continue;
@@ -278,8 +278,9 @@ void build_conflict_map() {
     delete[] matrix;
     delete[] picked;
     delete[] record;
-    delete[] range;
     delete[] regs;
+    delete[] range;
+
 }
 
 void distribute_reg_to_blks() {
@@ -376,7 +377,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     }
     update_active();
 
-    /*
+
     int i = 0;
     for(vector<blk_link>::iterator iter = blk_list.begin(); iter != blk_list.end(); iter++) {
 
@@ -402,7 +403,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
         cout << endl;
         cout  << "=========================" << endl;
     }
-    */
+
 
     var_reg.clear();
     build_conflict_map();

@@ -327,7 +327,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     local_const_pool.clear();
     local_var_pool.clear();
     for(int i = 0; i < ltab.size(); i++)
-        if(ltab[i].kind == var && !ltab[i].length)
+        if(ltab[i].kind == var && !ltab[i].length || ltab[i].kind == para)
             local_var_pool[string(ltab[i].ident)] = i;
         else if(ltab[i].kind == cons)
             local_const_pool[string(ltab[i].ident)] = ltab[i].value;

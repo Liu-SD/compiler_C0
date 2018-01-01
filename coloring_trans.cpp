@@ -134,6 +134,12 @@ void to_tcode(string func_name) {
     setblksz();
     ett(func_name + ":");
     ett("sw $ra " + int2str(OFFSET_RET_ADDR_ * WORD_WIDTH_) + "($fp)");
+
+    for(set<string>::iterator iter = blk_list[0]->in.begin(); iter != blk_list[0]->in.end(); iter++)
+        if(inRegister(*iter))
+            ett("lw " + regName(*iter) + " " + varOff(*iter));
+
+
     for(int i = 0; i < blk_list.size(); i++) {
         //ett("#==========");
         reg_dis = blk_list[i]->register_distribute;

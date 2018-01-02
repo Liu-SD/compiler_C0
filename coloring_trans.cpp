@@ -67,6 +67,10 @@ void loadArr(int reg, string v) {
     assert(0);
 }
 
+vector<string> get_saved_register(int cal_line, blk_link blk) {
+    return vector<string>();
+}
+
 void setblksz() {
     for(vector<TAB_ELEMENT>::reverse_iterator riter = ltab.rbegin(); riter != ltab.rend(); riter++) {
         if(riter->kind == var || riter->kind == para) {
@@ -100,16 +104,9 @@ string varOff(string v) {
 }
 
 int str2int(string v) {
-    int i = 0;
-    int sign = 1;
-    int num = 0;
-    if(v[i] = '-') {
-        sign = -1;
-        i++;
-    }
-    for(; i < v.size(); i++)
-        num = num * 10 + v[i] - '0';
-    return sign * num;
+    int n = 0;
+    sscanf(v.c_str(), "%d", &n);
+    return n;
 }
 
 
@@ -220,10 +217,10 @@ void to_tcode(string func_name) {
                 string op(sm[3]);
                 string c(sm[4]);
                 if(isConst(b) && isConst(c)) {
-                    int val = op == "+" ? str2int(b) + str2int(c) :
-                              op == "-" ? str2int(b) - str2int(c) :
-                              op == "*" ? str2int(b) * str2int(c) :
-                              str2int(b) / str2int(c);
+                    int val = op == "+" ? (str2int(b) + str2int(c)) :
+                              op == "-" ? (str2int(b) - str2int(c)) :
+                              op == "*" ? (str2int(b) * str2int(c)) :
+                              (str2int(b) / str2int(c));
                     if(inRegister(a)) {
                         ett("li " + regName(a) + " " + int2str(val));
                     } else {
@@ -328,6 +325,8 @@ void to_tcode(string func_name) {
                 ett("sw " + reg_v + " " + int2str((blksz + REGISTER_SIZE_ + DISPLAY_SIZE_ + pos) * 4) + "($fp)");
             } else if(regex_match(cd, sm, rcal)) {
                 string fn(sm[1]);
+
+                vector<string> saved_register = get_saved_register(j, blk_list[i]);
 
                 for(map<string, int>::iterator iter = reg_dis.begin(); iter != reg_dis.end(); iter++)
                     ett("sw " + regName(iter->first) + " " + int2str((blksz + iter->second - 10) * 4) + "($fp)");

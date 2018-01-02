@@ -23,18 +23,18 @@ void enter_use(blk_link blk, string var) {
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(local_const_pool[var]));
         return;
     }
-    if(global_const_pool.find(var) != global_const_pool.end()) {
+    else if(local_var_pool.find(var) != local_var_pool.end()) {
+        if(blk->def.find(var) == blk->def.end()) {
+            blk->use.insert(var);
+            blk->in.insert(var);
+        }
+    }
+    else if(global_const_pool.find(var) != global_const_pool.end()) {
         string cd = *blk->code.rbegin();
         int i = cd.find(var);
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(global_const_pool[var]));
         return;
     }
-    if(local_var_pool.find(var) == local_var_pool.end())
-        return;
-    if(blk->def.find(var) != blk->def.end())
-        return;
-    blk->use.insert(var);
-    blk->in.insert(var); // in = use U (out - def) all var that is in use must be in in
 }
 
 void enter_def(blk_link blk, string var) {
@@ -270,8 +270,7 @@ void build_conflict_map() {
         cout << regs[i] << ' ';
     cout << endl;
     */
-    for(map<string, int>::iterator iter = var_reg.begin(); iter != var_reg.end(); iter++)
-        cout << iter->first << ": " << iter->second << endl;
+
 
     for(int i = 0; i < var_count; i++)
         delete[] matrix[i];
@@ -333,7 +332,6 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
             local_var_pool[string(ltab[i].ident)] = i;
         else if(ltab[i].kind == cons)
             local_const_pool[string(ltab[i].ident)] = ltab[i].value;
-
     // throw away function declare
     ++begin;
 
@@ -377,7 +375,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     }
     update_active();
 
-
+    /*
     int i = 0;
     for(vector<blk_link>::iterator iter = blk_list.begin(); iter != blk_list.end(); iter++) {
 
@@ -401,8 +399,9 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
         for(set<string>::iterator i = (*iter)->in.begin(); i != (*iter)->in.end(); i++)
             cout << ' ' << *i;
         cout << endl;
-        cout  << "=========================" << endl;
+        cout  << "++++++++++++++++++++++++++++++++++++++" << endl;
     }
+    */
 
 
     var_reg.clear();
@@ -410,13 +409,21 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
 
     distribute_reg_to_blks();
 
+    /*
+    for(map<string, int>::iterator iter = var_reg.begin(); iter != var_reg.end(); iter++)
+        cout << iter->first << ": " << iter->second << endl;
+
+    cout << endl;
     for(int i = 0; i < blk_list.size(); i++) {
         cout << "block " << i << endl;
         for(map<string, int>::iterator iter = blk_list[i]->register_distribute.begin(); iter != blk_list[i]->register_distribute.end(); iter++)
             cout << iter->first << ": " << iter->second <<endl;
+        for(set<string>::iterator iter = blk_list[i]->in.begin(); iter != blk_list[i]->in.end(); iter++)
+            cout << *iter << endl;
         cout << endl;
     }
-
+    cout << "==================" << endl;
+    */
     to_tcode(func_name);
 
     // system("pause");

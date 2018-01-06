@@ -67,10 +67,6 @@ void loadArr(int reg, string v) {
     assert(0);
 }
 
-vector<string> get_saved_register(int cal_line, blk_link blk) {
-    return vector<string>();
-}
-
 void setblksz() {
     for(vector<TAB_ELEMENT>::reverse_iterator riter = ltab.rbegin(); riter != ltab.rend(); riter++) {
         if(riter->kind == var || riter->kind == para) {
@@ -325,8 +321,6 @@ void to_tcode(string func_name) {
                 ett("sw " + reg_v + " " + int2str((blksz + REGISTER_SIZE_ + DISPLAY_SIZE_ + pos) * 4) + "($fp)");
             } else if(regex_match(cd, sm, rcal)) {
                 string fn(sm[1]);
-
-                vector<string> saved_register = get_saved_register(j, blk_list[i]);
 
                 for(map<string, int>::iterator iter = reg_dis.begin(); iter != reg_dis.end(); iter++)
                     ett("sw " + regName(iter->first) + " " + int2str((blksz + iter->second - 10) * 4) + "($fp)");

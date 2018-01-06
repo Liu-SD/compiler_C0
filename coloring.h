@@ -4,24 +4,25 @@
 #include "translate.h"
 
 /*
-�Ĵ��������ͼ��ɫ�㷨��
-1. ���顣
-2. ���ӡ�
-3. ����use, def��
-4. ����out��in��active
+寄存器分配的图着色算法：
+1. 划块。函数调用语句CAL同样算作基本块结尾
+2. 连接。
+3. 计算use, def。
+4. 计算out，in，active
     out = U in
     in = use U (out - def)
     active = in U out = use U out
-5. ����active�����ͻͼ����ɫ�㷨ʵ�֡�
-    ͬһ����active�����ڵı���Ϊ��ͻ������
-    �õ������Ĵ�����Ӧ����δ�ܷ��䵽�Ĵ����Ļ�Ծ�������������
-6. ����Ĵ�����
+5. 根据active构造冲突图，着色算法实现。
+    同一个块active集合内的变量为冲突变量。
+    得到变量寄存器对应表。未能分配到寄存器的活跃变量不填如表。
+6. 分配寄存器。
     for each block:
-        active�����еı���������5�з����������Ĵ�����
-        def - out�����еı�����ʹ��active���ϱ���ʣ��Ĵ�����
+        active集合中的变量：根据5中分析结果分配寄存器。
+        def - out集合中的变量，使用active集合变量剩余寄存器。
 
-- �ֲ��������Ĵ�����
-- ���鲻��local_var_pool��
+- 局部变量进寄存器。
+- 数组不进local_var_pool。
+- 遇到CAL保存现场时，只对out集中的变量保存现场。
 */
 
 

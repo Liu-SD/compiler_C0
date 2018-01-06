@@ -22,14 +22,12 @@ void enter_use(blk_link blk, string var) {
         int i = cd.find(var);
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(local_const_pool[var]));
         return;
-    }
-    else if(local_var_pool.find(var) != local_var_pool.end()) {
+    } else if(local_var_pool.find(var) != local_var_pool.end()) {
         if(blk->def.find(var) == blk->def.end()) {
             blk->use.insert(var);
             blk->in.insert(var);
         }
-    }
-    else if(global_const_pool.find(var) != global_const_pool.end()) {
+    } else if(global_const_pool.find(var) != global_const_pool.end()) {
         string cd = *blk->code.rbegin();
         int i = cd.find(var);
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(global_const_pool[var]));
@@ -128,6 +126,9 @@ void build_blk_list(vector<pair<string, string>>::iterator begin, vector<pair<st
             enter_use(blk, string(sm[2]));
         } else if(regex_match(iter->second, sm, rscan)) {
             enter_def(blk, string(sm[2]));
+        } else if(regex_match(iter->second, sm, rcal)) { // it will link to next block automatically because of `else` in `link_blk_list`, there's no need for the call flag
+            blk = new blk_node;
+            blk_list.push_back(blk);
         }
     }
 }

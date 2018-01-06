@@ -47,6 +47,7 @@ void NFA_program() {
     where(true, "NFA_program");
     typedef enum {A, B, C, D, E, F, G, H} STAT;
     STAT status = A;
+    nextSym();
     while(status != H) {
         // cout << char(status + 'A') << endl;
         switch (status) {

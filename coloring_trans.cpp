@@ -82,6 +82,7 @@ bool inRegister(string v) {
 }
 
 string regName(string v) {
+    assert(reg_dis.find(v) != reg_dis.end());
     return "$" + int2str(reg_dis[v]);
 }
 
@@ -322,13 +323,16 @@ void to_tcode(string func_name) {
             } else if(regex_match(cd, sm, rcal)) {
                 string fn(sm[1]);
 
-                for(map<string, int>::iterator iter = reg_dis.begin(); iter != reg_dis.end(); iter++)
-                    ett("sw " + regName(iter->first) + " " + int2str((blksz + iter->second - 10) * 4) + "($fp)");
+                for(set<string>::iterator iter = blk_list[i]->out.begin(); iter != blk_list[i]->out.end(); iter++)
+                    if(inRegister(*iter))ett("sw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - 10) * 4) + "($fp)");
+
                 ett("sw $fp " + int2str((blksz + REGISTER_SIZE_ + OFFSET_PREV_FP_) * 4) + "($fp)");
                 ett("addi $fp $fp " + int2str((blksz + REGISTER_SIZE_) * 4));
                 ett("jal " + fn);
-                for(map<string, int>::iterator iter = reg_dis.begin(); iter != reg_dis.end(); iter++)
-                    ett("lw " +regName(iter->first) + " " + int2str((blksz + iter->second - 10) * 4) + "($fp)");
+
+                for(set<string>::iterator iter = blk_list[i]->out.begin(); iter != blk_list[i]->out.end(); iter++)
+                    if(inRegister(*iter))ett("lw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - 10) * 4) + "($fp)");
+
 
             } else if(regex_match(cd, sm, rprintv)) { // printf v
                 string flg(sm[1]);

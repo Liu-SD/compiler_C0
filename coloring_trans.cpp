@@ -6,7 +6,7 @@
 #define OFFSET_RET_ADDR_ 1
 #define OFFSET_PREV_FP_ 2
 #define DISPLAY_SIZE_ 3
-#define REGISTER_SIZE_ (25 - 10 + 1)
+#define REGISTER_SIZE_ reg_count
 
 #define WORD_WIDTH_ 4
 #define DATA_BASE_ADDR_ 0x10040000
@@ -324,14 +324,14 @@ void to_tcode(string func_name) {
                 string fn(sm[1]);
 
                 for(set<string>::iterator iter = blk_list[i]->out.begin(); iter != blk_list[i]->out.end(); iter++)
-                    if(inRegister(*iter))ett("sw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - 10) * 4) + "($fp)");
+                    if(inRegister(*iter))ett("sw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - reg_start) * 4) + "($fp)");
 
                 ett("sw $fp " + int2str((blksz + REGISTER_SIZE_ + OFFSET_PREV_FP_) * 4) + "($fp)");
                 ett("addi $fp $fp " + int2str((blksz + REGISTER_SIZE_) * 4));
                 ett("jal " + fn);
 
                 for(set<string>::iterator iter = blk_list[i]->out.begin(); iter != blk_list[i]->out.end(); iter++)
-                    if(inRegister(*iter))ett("lw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - 10) * 4) + "($fp)");
+                    if(inRegister(*iter))ett("lw " + regName(*iter) + " " + int2str((blksz + reg_dis[*iter] - reg_start) * 4) + "($fp)");
 
 
             } else if(regex_match(cd, sm, rprintv)) { // printf v

@@ -1,6 +1,5 @@
 #include "coloring.h"
 
-#include <cstdlib>
 #include <cassert>
 
 vector<blk_link> blk_list;
@@ -12,9 +11,6 @@ map<string, int> local_const_pool;
 map<string, int> var_reg;
 
 
-const int reg_start = 10;
-const int reg_end = 25;
-const int reg_count = reg_end - reg_start + 1;
 
 void enter_use(blk_link blk, string var) {
     if(local_const_pool.find(var) != local_const_pool.end()) {
@@ -85,13 +81,11 @@ void build_blk_list(vector<pair<string, string>>::iterator begin, vector<pair<st
         smatch sm;
         blk->code.push_back(iter->second);
         if(regex_match(iter->second, sm, rbranch)) {
-            // blk->code.push_back(iter->second);
             enter_use(blk, string(sm[2]));
             blk->branch_label = "#" + string(sm[3]);
             blk = new blk_node;
             blk_list.push_back(blk);
         } else if(regex_match(iter->second, sm, rjump)) {
-            // blk->code.push_back(iter->second);
             blk->jump_label = "#" + string(sm[1]);
             blk = new blk_node;
             blk_list.push_back(blk);
@@ -141,7 +135,6 @@ void link_blk_list() {
                 if(blk_list[i]->jump_label == blk_list[j]->label) {
                     blk_list[i]->successor.insert(blk_list[j]);
                     blk_list[j]->precursor.insert(blk_list[i]);
-                    //cout << i << "->" << j << endl;
                     break;
                 }
             }
@@ -150,22 +143,17 @@ void link_blk_list() {
                 if(blk_list[i]->branch_label == blk_list[j]->label) {
                     blk_list[i]->successor.insert(blk_list[j]);
                     blk_list[j]->precursor.insert(blk_list[i]);
-                    //cout << i << "->" << j << endl;
                     break;
                 }
             }
             blk_list[i]->successor.insert(blk_list[i + 1]);
             blk_list[i + 1]->precursor.insert(blk_list[i]);
-            //cout << i << "->" << i + 1 << endl;
         } else if(blk_list[i]->ret_blk) {
-            //cout << i << "->exit" << endl;
         } else {
             blk_list[i]->successor.insert(blk_list[i + 1]);
             blk_list[i + 1]->precursor.insert(blk_list[i]);
-            //cout << i << "->" << i + 1 << endl;
         }
     }
-    //cout << "block count: " << blk_list.size() << endl;
 }
 
 void build_conflict_map() {
@@ -177,7 +165,6 @@ void build_conflict_map() {
             if(var_index.find(*iter) == var_index.end()) {
                 index_var[var_count] = *iter;
                 var_index[*iter] = var_count++;
-                // cout << var_count - 1 << ":\t" << *iter << endl;
             }
 
     int **matrix = new int*[var_count];
@@ -353,7 +340,7 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     // link nodes
     link_blk_list();
 
-    // delete unreachable node
+    // delete unreachable node, TODO
     /* still have bug
     for(vector<blk_link>::iterator i = blk_list.begin(); i != blk_list.end(); i++)
         if((*i)->precursor.empty()) {
@@ -426,8 +413,6 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     cout << "==================" << endl;
     */
     to_tcode(func_name);
-
-    // system("pause");
 }
 
 void coloring_translate(vector<pair<string, string>> mcode) {

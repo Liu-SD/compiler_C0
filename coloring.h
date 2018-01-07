@@ -36,6 +36,10 @@ using std::smatch;
 using std::cout;
 using std::endl;
 
+const int reg_start = 10;
+const int reg_end = 25;
+const int reg_count = reg_end - reg_start + 1;
+
 typedef struct blk_node {
     set<string> use;
     set<string> def;

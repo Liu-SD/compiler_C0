@@ -37,13 +37,14 @@ int main(int argc, char *argv[]) {
     // 编译出现错误则停止之后的行为
     if (!errorlist.empty())
         return 0;
-    std::cout << "no error in program\ngenerate mcode in ./mocde.c0\ngenerate tcode in ./tcode.asm" << std::endl;
-    std::cout << "generate dag optimized mcode in ./dag_optimized_mcode.c0\ngenerate dag optimized tcode.asm in ./ dag_optimized_tacode.asm" << std::endl;
+    std::cout << "no error in program" << std::endl;
     // 打印中间代码到code.c0
+    std::cout << "generate mcode in ./mcode.c0" << std::endl;
     printMcode("mcode.c0");
     // 将中间代码翻译成目标代码
     translate(embeddingLabel());
     // 打印目标代码
+    std::cout << "generate tcode in ./tcode.asm" << std::endl;
     printTcode("tcode.asm");
     // DAG图优化，得到优化后中间代码
     dag_optimize();
@@ -52,13 +53,16 @@ int main(int argc, char *argv[]) {
     // 打印新的符号表
     // show_tables();
     // 打印优化后中间代码到mcode_dag_optimized.c0
+    std::cout << "generate dag optimized mcode in ./mcode_dag_optimized.c0" << std::endl;
     printMcode_optimized("mcode_dag_optimized.c0");
     // 按简单翻译策略从DAG优化中间代码翻译成目标代码
     translate(optimize_codes);
     // 打印DAG优化后目标代码
+    std::cout << "generate dag optimized tcode in ./tcode_dag_optimized.asm" << std::endl;
     printTcode("tcode_dag_optimized.asm");
     // 按着色算法优化的翻译策略从DAG优化中间代码翻译成目标代码
     coloring_translate(optimize_codes);
     // 打印DAG和着色算法共同优化的目标代码！
+    std::cout << "generate coloring optimized tcode in ./tcode_coloring_optimized.asm" << std::endl;
     printTcode_coloring("tcode_coloring_optimized.asm");
 }

@@ -121,7 +121,8 @@ void to_tcode(string func_name) {
         }
         ett("li $fp " + int2str(DATA_BASE_ADDR_ + 4 * off));
         ett("jal main");
-        ett("end: beq $0 $0 end");
+        ett("li $v0 10");
+        ett("syscall");
         setHead = true;
     }
 

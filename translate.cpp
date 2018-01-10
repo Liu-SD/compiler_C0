@@ -203,7 +203,8 @@ void translate(EMBEDTAB embedcode) {
     // jal main
     write("jal main");
     // dead loop
-    write("end: beq $0 $0 end");
+    write("li $v0 10");
+    write("syscall");
 
     for(EMBEDTAB::iterator iter = embedcode.begin(); iter != embedcode.end(); ++iter) {
 

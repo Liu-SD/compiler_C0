@@ -159,7 +159,7 @@ void nextSym() {
         int i = 0;
         while(ch >= 32 && ch <= 126 && ch != 34) {
             stringbuff[i++] = ch;
-            if(ch == '\\') stringbuff[i++] = ch;
+            // if(ch == '\\') stringbuff[i++] = ch;
             nextCh();
         }
         stringbuff[i] = 0;

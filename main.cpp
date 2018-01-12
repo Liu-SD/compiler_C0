@@ -6,19 +6,14 @@
 
 int main(int argc, char *argv[]) {
 
-    /*
+
     if(argc < 2) {
-        std::cout << "input file path" << std::endl;
-        return -1;
-    }
-    set_file_stream(argv[1]);
-    */
-
-    std::cout << "file path:" << std::endl;
-    char fpath[100];
-    std::cin >> fpath;
-    set_file_stream(fpath);
-
+        std::cout << "file path:" << std::endl;
+        char fpath[100];
+        std::cin >> fpath;
+        set_file_stream(fpath);
+    } else
+        set_file_stream(argv[1]);
 
     //set_file_stream("tmp.txt");
     //set_file_stream("input(1).txt");

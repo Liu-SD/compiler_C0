@@ -104,10 +104,10 @@ void show_tables() {
 
 void update_symbol_table(std::set<std::string> reserved_var) {
     for(int i = 0; i < local_tab.size(); i++) {
-        for(std::vector<TAB_ELEMENT>::iterator iter = local_tab[i].begin(); iter != local_tab[i].end(); iter++) {
+        for(std::vector<TAB_ELEMENT>::iterator iter = local_tab[i].begin(); iter != local_tab[i].end();) {
             if(reserved_var.find(std::string(iter->ident)) == reserved_var.end()) {
-                iter = local_tab[i].erase(iter) - 1;
-            }
+                iter = local_tab[i].erase(iter);
+            } else iter++;
         }
         int offset = FUNC_OFFSET;
         for(int j = 0; j < local_tab[i].size(); j++) {

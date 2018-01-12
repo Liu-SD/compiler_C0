@@ -6,15 +6,14 @@
 #include "error.h"
 
 
-typedef enum {ident = 0,
-              intcon, intsy, charcon, charsy, stringcon, voidsy, constsy,
-              pluscon, minuscon, timescon, divcon, becomes,
-              eql, neq, gtr, grq, lss, leq,
-              lsmall, rsmall, lmedium, rmedium, lbig, rbig,
-              comma, semicolon, colon,
-              ifsy, elsesy, whilesy, switchsy, casesy, defaultsy, mainsy,
-              returnsy, scanfsy, printfsy, eof
-             } SYMBOL;
+typedef enum {
+    ident, intcon, intsy, charcon, charsy, stringcon,
+    voidsy, constsy, pluscon, minuscon, timescon, divcon,
+    becomes, eql, neq, gtr, grq, lss, leq, lsmall, rsmall, lmedium,
+    rmedium, lbig, rbig, comma, semicolon, colon, ifsy, elsesy,
+    whilesy, switchsy, casesy, defaultsy, mainsy,
+    returnsy, scanfsy, printfsy, eof
+} SYMBOL;
 
 static char* SYMBOL_STRING[] = {"ident", "intcon", "instsy", "charcon",
                                 "charsy", "stringcon", "voidsy", "constsy",

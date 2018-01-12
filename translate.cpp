@@ -292,7 +292,7 @@ void translate(EMBEDTAB embedcode) {
 
         }
 
-        else if(std::regex_match(iter->second, sm, rretval)) {
+        else if (std::regex_match(iter->second, sm, rretval)) {
 
 
             std::string ret_var(sm[1]);

@@ -99,7 +99,7 @@ void printMcode(std::string path) {
     EMBEDTAB code = embeddingLabel();
     // std::cout << std::endl;
     for(int i = 0; i < code.size(); i++) {
-        char s[100];
+        char s[9527];
         sprintf(s, "%10s    %s\n", code[i].first.c_str(), code[i].second.c_str());
         fout << s;
     }

@@ -368,7 +368,7 @@ void dag_optimize() {
 void printMcode_optimized(string path) {
     std::ofstream fout(path);
     for(int i = 0; i < optimize_codes.size(); i++) {
-        char s[500];
+        char s[5000];
         sprintf(s, "%10s    %s\n", optimize_codes[i].first.c_str(), optimize_codes[i].second.c_str());
         fout << s;
     }

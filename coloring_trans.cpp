@@ -111,15 +111,15 @@ int str2int(string v) {
 void to_tcode(string func_name) {
     static bool setHead = false;
     if (!setHead) {
-        ett("li $gp " + int2str(DATA_BASE_ADDR_));
         int off = 0;
         for (int i = global_tab.size() - 1; i >= 0; i--) {
             if (global_tab[i].kind == var) {
-                off = global_tab[i].length ? global_tab[i].value + 1 : global_tab[i].value + global_tab[i].length;
+                off = global_tab[i].length ? global_tab[i].value + global_tab[i].length : global_tab[i].value + 1;
                 break;
             }
         }
         ett("li $fp " + int2str(DATA_BASE_ADDR_ + 4 * off));
+        ett("li $gp " + int2str(DATA_BASE_ADDR_));
         ett("jal main");
         ett("li $v0 10");
         ett("syscall");

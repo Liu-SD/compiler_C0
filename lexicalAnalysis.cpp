@@ -16,13 +16,13 @@ int cc;
 int num;
 char ch;
 SYMBOL sym;
-char token[30];
-char stringbuff[500];
-char current_line[500];
+char token[3000];
+char stringbuff[5000];
+char current_line[5000];
 
 void nextCh() {
     while(cc == ll) {
-        if(!fin->getline(current_line, 300)) {
+        if(!fin->getline(current_line, 5000)) {
             ch = -1;
             return;
         }
@@ -159,7 +159,7 @@ void nextSym() {
         int i = 0;
         while(ch >= 32 && ch <= 126 && ch != 34) {
             stringbuff[i++] = ch;
-            // if(ch == '\\') stringbuff[i++] = ch;
+            if(ch == '\\') stringbuff[i++] = ch;
             nextCh();
         }
         stringbuff[i] = 0;

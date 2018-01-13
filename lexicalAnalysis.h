@@ -31,9 +31,9 @@ extern int cc;
 extern int num;
 extern char ch;
 extern SYMBOL sym;
-extern char token[30];
-extern char stringbuff[500];
-extern char current_line[500];
+extern char token[3000];
+extern char stringbuff[5000];
+extern char current_line[5000];
 const int keywordCount = 14;
 static char* keywords[] = {
     "if", "else", "while", "switch", "case", "default", "scanf", "printf",

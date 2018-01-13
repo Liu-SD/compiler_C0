@@ -8,7 +8,7 @@
 
 extern int lc;
 extern int cc;
-extern char current_line[500];
+extern char current_line[5000];
 
 
 const bool debug = false;
@@ -18,7 +18,7 @@ struct ERROR {
     int errcode;
     int errline;
     int errpos;
-    char linecontent[300];
+    char linecontent[5000];
 };
 
 const int SHUT_DOWN = 37;

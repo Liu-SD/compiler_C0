@@ -14,6 +14,7 @@ map<string, int> var_reg;
 
 void enter_use(blk_link blk, string var) {
     if(local_const_pool.find(var) != local_const_pool.end()) {
+        assert(0);
         string cd = *blk->code.rbegin();
         int i = cd.find(var);
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(local_const_pool[var]));
@@ -24,6 +25,7 @@ void enter_use(blk_link blk, string var) {
             blk->in.insert(var);
         }
     } else if(global_const_pool.find(var) != global_const_pool.end()) {
+        assert(0);
         string cd = *blk->code.rbegin();
         int i = cd.find(var);
         *blk->code.rbegin() = cd.replace(i, var.size(), int2str(global_const_pool[var]));

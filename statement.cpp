@@ -763,7 +763,8 @@ void factor(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value)
                 exp_bool = true;
                 exp_value = lkup.value;
                 type = lkup.type;
-                res = std::string(lkup.ident);
+                //res = std::string(lkup.ident);
+                res = int2str(lkup.value);
                 nextSym();
             }
         } else {

@@ -1,0 +1,8 @@
+
+*.o
+*.exe
+*.layout
+*.depend
+*.txt
+*.c0
+*.asm

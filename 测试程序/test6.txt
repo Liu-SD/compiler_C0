@@ -1,0 +1,8 @@
+const int cons = 123, x;
+int a, b = 1;
+const char c = 'c';
+void main() {
+	const char c = 'd';
+	int a;
+	const int d = 1;
+}

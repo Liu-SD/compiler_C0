@@ -1,0 +1,21 @@
+int echo(int x) {
+	return (x);
+}
+
+void out(int x) {
+	printf(x);
+}
+
+int no_param {
+	return (1);
+}
+
+int no_param2 () {
+	return (2);
+}
+
+void main() {
+	echo('c');
+	printf(out(3));
+	no_param();
+}

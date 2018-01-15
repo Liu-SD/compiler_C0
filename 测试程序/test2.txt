@@ -1,0 +1,56 @@
+int arr[1000];
+int count;
+
+int sum {
+	int i, s;
+	i = 0;
+	s = 0;
+	while(i < count)
+		s = ++1 + s + arr[i] - -1;
+	return (s + s * s / s - (s * 1 + 0));
+}
+
+int avg {
+	;;
+	{}
+	{;}
+	return (sum / count);
+}
+
+int max {
+	int x, i;
+	x = arr[0];
+	i = 0;
+	while(i < count)
+		if(arr[i] < x) x = arr[i];else;
+	return (x);
+}
+
+int min {
+	int x, i;
+	x = arr[0];
+	i = 0;
+	while(i < count)
+		if(arr[i] > x) x = arr[i];else;
+	return (x);
+}
+
+void main() {
+	int i, j;
+	scanf(count);
+	if(count <= 0)
+		printf("larger than 0! ");
+	else if(count > 1000)
+		printf("no more than 1000! ");
+	else {
+		i = 0;
+		while(i < count) {
+			scanf(j);
+			arr[i] = j;
+		}
+		printf(" ", sum);
+		printf(" ", avg);
+		printf(" ", max);
+		printf(" ", min);
+	}
+}

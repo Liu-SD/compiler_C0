@@ -1,0 +1,17 @@
+int a(int x) {
+	printf(x);
+}
+
+void b {
+	return (3);
+}
+
+void c {
+	int c;
+}
+
+void main() {
+	const int a = 10;
+	a = 100;
+	100 = 100;
+}

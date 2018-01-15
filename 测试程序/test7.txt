@@ -1,0 +1,14 @@
+const char c = '&';
+const int a = 01;
+const int b = +0;
+const int d = 'x';
+const char e = 1;
+
+void main() {
+	char c;
+	int a, b;
+	c = '&';
+	a = 01;
+	b = +0;
+	b = -0;
+}

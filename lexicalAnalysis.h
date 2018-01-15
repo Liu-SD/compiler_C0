@@ -45,7 +45,6 @@ static SYMBOL keySet[] = {
 };
 
 extern void set_file_stream(char * filepath);
-// void nextCh();
 extern void nextSym();
 
 

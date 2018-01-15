@@ -6,30 +6,16 @@ vector<blk_link> blk_list;
 
 vector<TAB_ELEMENT> ltab;
 map<string, int> local_var_pool;
-map<string, int> global_const_pool;
-map<string, int> local_const_pool;
 map<string, int> var_reg;
 
 
 
 void enter_use(blk_link blk, string var) {
-    if(local_const_pool.find(var) != local_const_pool.end()) {
-        assert(0);
-        string cd = *blk->code.rbegin();
-        int i = cd.find(var);
-        *blk->code.rbegin() = cd.replace(i, var.size(), int2str(local_const_pool[var]));
-        return;
-    } else if(local_var_pool.find(var) != local_var_pool.end()) {
+    if(local_var_pool.find(var) != local_var_pool.end()) {
         if(blk->def.find(var) == blk->def.end()) {
             blk->use.insert(var);
             blk->in.insert(var);
         }
-    } else if(global_const_pool.find(var) != global_const_pool.end()) {
-        assert(0);
-        string cd = *blk->code.rbegin();
-        int i = cd.find(var);
-        *blk->code.rbegin() = cd.replace(i, var.size(), int2str(global_const_pool[var]));
-        return;
     }
 }
 
@@ -226,13 +212,7 @@ void build_conflict_map() {
             if(max_node_index != j && matrix[max_node_index][j])
                 matrix[j][var_count]--;
     }
-    /*
-    for(int i = 0; i < var_count; i++) {
-        for(int j = 0; j <= var_count; j++)
-            cout << matrix[i][j] << ' ' ;
-        cout << endl;
-    }
-    */
+
     int *range = new int[var_count];
     for(int i = 0; i < var_count; i++)
         range[picked[i] - 1] = i;
@@ -255,12 +235,6 @@ void build_conflict_map() {
             }
         }
     }
-    /*
-    for(int i = 0; i < var_count; i++)
-        cout << regs[i] << ' ';
-    cout << endl;
-    */
-
 
     for(int i = 0; i < var_count; i++)
         delete[] matrix[i];
@@ -315,13 +289,10 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
         }
     }
 
-    local_const_pool.clear();
     local_var_pool.clear();
     for(int i = 0; i < ltab.size(); i++)
         if(ltab[i].kind == var && !ltab[i].length || ltab[i].kind == para)
             local_var_pool[string(ltab[i].ident)] = i;
-        else if(ltab[i].kind == cons)
-            local_const_pool[string(ltab[i].ident)] = ltab[i].value;
     // throw away function declare
     ++begin;
 
@@ -343,16 +314,6 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     link_blk_list();
 
     // delete unreachable node, TODO
-    /* still have bug
-    for(vector<blk_link>::iterator i = blk_list.begin(); i != blk_list.end(); i++)
-        if((*i)->precursor.empty()) {
-            for(set<blk_link>::iterator j = (*i)->precursor.begin(); j != (*i)->precursor.end(); j++)
-                (*j)->precursor.erase(*i);
-            blk_list.erase(i);
-            delete *i;
-            i = blk_list.begin() - 1;
-        }
-    */
 
     // update in and out set
     while(1) {
@@ -365,62 +326,15 @@ void coloring(vector<pair<string, string>>::iterator begin, vector<pair<string,s
     }
     update_active();
 
-    /*
-    int i = 0;
-    for(vector<blk_link>::iterator iter = blk_list.begin(); iter != blk_list.end(); iter++) {
-
-        //if(!(*iter)->label.empty())
-        //    cout << (*iter)->label << endl;
-        //for(int i = 0; i < (*iter)->code.size(); i++) {
-        //    cout << (*iter)->code[i] << endl;
-        //}
-
-        cout << "block " << i++ <<endl;
-        cout << "use:" << endl;
-        for(set<string>::iterator i = (*iter)->use.begin(); i != (*iter)->use.end(); i++)
-            cout << ' ' << *i;
-        cout << endl << "def:" << endl;
-        for(set<string>::iterator i = (*iter)->def.begin(); i != (*iter)->def.end(); i++)
-            cout << ' ' << *i;
-        cout <<endl << "out:" << endl;
-        for(set<string>::iterator i = (*iter)->out.begin(); i != (*iter)->out.end(); i++)
-            cout << ' ' << *i;
-        cout << endl << "in:" << endl;
-        for(set<string>::iterator i = (*iter)->in.begin(); i != (*iter)->in.end(); i++)
-            cout << ' ' << *i;
-        cout << endl;
-        cout  << "++++++++++++++++++++++++++++++++++++++" << endl;
-    }
-    */
-
-
     var_reg.clear();
     build_conflict_map();
 
     distribute_reg_to_blks();
 
-    /*
-    for(map<string, int>::iterator iter = var_reg.begin(); iter != var_reg.end(); iter++)
-        cout << iter->first << ": " << iter->second << endl;
-
-    cout << endl;
-    for(int i = 0; i < blk_list.size(); i++) {
-        cout << "block " << i << endl;
-        for(map<string, int>::iterator iter = blk_list[i]->register_distribute.begin(); iter != blk_list[i]->register_distribute.end(); iter++)
-            cout << iter->first << ": " << iter->second <<endl;
-        for(set<string>::iterator iter = blk_list[i]->in.begin(); iter != blk_list[i]->in.end(); iter++)
-            cout << *iter << endl;
-        cout << endl;
-    }
-    cout << "==================" << endl;
-    */
     to_tcode(func_name);
 }
 
 void coloring_translate(vector<pair<string, string>> mcode) {
-    for(int i = 0; i < global_tab.size(); i++)
-        if(global_tab[i].kind == cons)
-            global_const_pool[string(global_tab[i].ident)] = global_tab[i].value;
 
     vector<pair<string, string>>::iterator p = mcode.begin();
     for(vector<pair<string, string>>::iterator iter = mcode.begin(); iter != mcode.end(); iter++) {

@@ -13,9 +13,6 @@ EMBEDTAB embedcode;
 int block;
 int blockSize;
 
-
-
-
 std::vector<std::string> text_segment;
 std::vector<std::string> data_segment;
 
@@ -85,7 +82,6 @@ bool num(std::string s) {
 
 void write(std::string s) {
     text_segment.push_back(s);
-    //std::cout << s << std::endl;
 }
 
 std::string writeString(std::string str) {

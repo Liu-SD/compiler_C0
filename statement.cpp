@@ -3,8 +3,6 @@
 #define isCompareOp(x) ((sym) == lss || (sym) == leq || (sym) == eql || (sym) == neq|| (sym) == grq || (sym) == gtr)
 #define STATBEGSYM ifsy, whilesy, switchsy, ident, mainsy, returnsy, semicolon, scanfsy, printfsy, lbig
 
-// using namespace std;
-
 bool returnExist;
 
 
@@ -299,8 +297,6 @@ void switchStatement(TAB_ELEMENT *tab) {
             if(sym == intcon && type_switch == t_char || sym == charcon && type_switch == t_int)
                 error(34);
             if(signal == -1) {
-                // std::string t0 = newTmpVar();
-                // emit(t0, "=", int2str(-1 * num));
                 std::string t0 = newTmpVar();
                 emit(t0, int2str(-1 * num), "-", name_switch);
                 emit("NEZ", t0, jump_to_next_case);
@@ -411,7 +407,6 @@ void printfStatement(TAB_ELEMENT *tab) {
     }
     if(sym == stringcon) {
         std::string str(stringbuff);
-        // emit("PRINTFS", "<" + std::string(stringbuff) + ">");
         nextSym();
         if(sym == comma) {
             nextSym();
@@ -531,7 +526,6 @@ void callStatement(TAB_ELEMENT *tab) {
             if(type_para != local_tab[funcele.value][para_count].type)
                 error(26);
 
-            // emit("PUSH", name_para, int2str(para_count));
             para_names.push_back(name_para);
             ++para_count;
         } while(sym == comma);
@@ -606,7 +600,6 @@ void expression(SYMBOL_TYPE &type, std::string &res) {
 void expression(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value) {
     where(true, "expression");
     std::string name = newTmpVar();
-    // SYMBOL_TYPE type;
     int signal = 1;
     if(sym == pluscon || sym == minuscon) {
         if(sym == minuscon) signal = -1;
@@ -698,7 +691,6 @@ void factor(SYMBOL_TYPE &type, std::string &res, bool &exp_bool, int &exp_value)
                         if(local_tab[lkup.value][para_count].type != para_type)
                             error(26);
 
-                        //emit("PUSH", para_name, int2str(para_count));
                         para_names.push_back(para_name);
                         ++para_count;
 

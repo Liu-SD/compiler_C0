@@ -306,7 +306,6 @@ void global_funcDeclare(TAB_ELEMENT *tab) {
                     error(12);
                 }
                 enter(token, para, t, 0, 0, 1);
-                // emit("para", t == t_int ? "int": "char", std::string(token));
                 ++paracount;
                 nextSym();
             } while(sym == comma);

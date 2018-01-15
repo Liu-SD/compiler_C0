@@ -76,7 +76,6 @@ EMBEDTAB embeddingLabel() {
         std::pair<std::string, std::string> p (std::string(), *iter);
         embed.push_back(p);
     }
-    // embed.push_back(std::pair<std::string, std::string> (std::string(), "BREAK"));
     for (std::map<std::string, int>::iterator iter= label_tab.begin(); iter != label_tab.end(); ++iter) {
         if(embed[iter->second].first.empty()) {
             embed[iter->second].first = iter->first;
@@ -97,7 +96,6 @@ EMBEDTAB embeddingLabel() {
 void printMcode(std::string path) {
     std::ofstream fout(path);
     EMBEDTAB code = embeddingLabel();
-    // std::cout << std::endl;
     for(int i = 0; i < code.size(); i++) {
         char s[9527];
         sprintf(s, "%10s    %s\n", code[i].first.c_str(), code[i].second.c_str());

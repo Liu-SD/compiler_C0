@@ -147,11 +147,6 @@ string calculate(dag_link link) {
 
 void DAG(vector<quadruple>::iterator begin, vector<quadruple>::iterator end) {
 
-    //for (vector<quadruple>::iterator iter = begin; iter != end; iter++)
-    //	cout << iter->code << endl;
-
-    //cout << "==================" << endl;
-
     for (vector<quadruple>::iterator iter = begin; iter != end; iter++) {
         dag_link left;
         dag_link right;
@@ -308,7 +303,6 @@ void DAG(vector<quadruple>::iterator begin, vector<quadruple>::iterator end) {
             for (int i = 0; i < reverse_node_map[v].size(); i++) {
                 if (reserved_var.find(reverse_node_map[v][i]) != reserved_var.end()) {
                     enter_code(reverse_node_map[v][i], l_str);
-                    // cout << reverse_node_map[v][i] << " = " << l_str << endl;
                 }
             }
         } else {
@@ -324,15 +318,12 @@ void DAG(vector<quadruple>::iterator begin, vector<quadruple>::iterator end) {
                 string r_str = calculate(v->right);
 
                 enter_code(reservedVarInV[0], l_str, v->op, r_str);
-                // cout << reservedVarInV[0] << " = " << l_str << " " << v->op << " " << r_str << endl;
                 for (int i = 1; i < reservedVarInV.size(); i++)
                     enter_code(reservedVarInV[i], reservedVarInV[0]);
-                //cout << reservedVarInV[i] << " = " << reservedVarInV[0] << endl;
             }
         }
     }
 
-    //cout << endl;
     for (int i = 0; i < node_list.size(); i++)
         delete node_list[i];
 
@@ -356,7 +347,6 @@ void dag_optimize() {
             if(!mcode[entrance[i]].label.empty())
                 enter_label(mcode[entrance[i]].label);
             DAG(mcode.begin() + entrance[i], mcode.begin() + entrance[i + 1]);
-            //break;
         } else if(entrance[i + 1] - entrance[i] == 1) {
             if(!mcode[entrance[i]].label.empty())
                 enter_label(mcode[entrance[i]].label);

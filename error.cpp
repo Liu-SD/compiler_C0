@@ -13,7 +13,6 @@ void showerrormessages() {
                   << ", position " << e.errpos << std::endl
                   << e.linecontent << errormessages[e.errcode]
                   << std::endl << std::endl;
-        // printf("%2d : line: %d, position: %d \"%s\" %s\n", i, e.errline, e.errpos, e.linecontent, errormessages[e.errcode]);
     }
 }
 

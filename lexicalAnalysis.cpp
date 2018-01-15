@@ -6,8 +6,6 @@
 #define isblank(x) ((x) == ' ' || (x) == '\t' || (x) == '\n' || (x) == 13)
 #define tolow(s) do {int i = -1; while(s[++i]) s[i] = tolower(s[i]);} while(0)
 
-// using namespace std;
-
 std::ifstream *fin;
 
 int ll;

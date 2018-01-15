@@ -136,14 +136,11 @@ void to_tcode(string func_name) {
             ett("lw " + regName(*iter) + " " + varOff(*iter));
 
     for (int i = 0; i < blk_list.size(); i++) {
-        //ett("#==========");
         reg_dis = blk_list[i]->register_distribute;
         if (!blk_list[i]->label.empty())
             ett(blk_list[i]->label.substr(1, 9527) + ":");
         for (int j = 0; j < blk_list[i]->code.size(); j++) {
             string cd = blk_list[i]->code[j];
-            //ett("");
-            //ett("#" + cd);
             smatch sm;
             if (regex_match(cd, sm, rreturn)) {
                 ett("lw $ra " + int2str(OFFSET_RET_ADDR_ * WORD_WIDTH_) + "($fp)");
